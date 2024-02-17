@@ -1,0 +1,4 @@
+[submodule "freertos-fus-pre"]
+	path = freertos-fus-pre
+	url = https://github.com/FSEmbedded/freertos-fus-pre.git
+	branch = fsimx8mp
