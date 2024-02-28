@@ -16,8 +16,7 @@ RUN curl -L "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.
     && rm gcc-arm-none-eabi.tar.bz2
 ENV ARMGCC_DIR=/usr/local/arm/gcc-arm-none-eabi-10.3-2021.10
 
-COPY freertos-fus-pre /freertos-fus-pre
-COPY patch/CMakeLists.txt /freertos-fus-pre/CMakeLists.txt
+COPY fsimx8mp-m7-sdk /freertos-fus-pre
 
 WORKDIR /freertos-fus-pre
 

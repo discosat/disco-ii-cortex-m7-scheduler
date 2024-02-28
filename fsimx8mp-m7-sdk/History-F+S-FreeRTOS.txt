@@ -1,0 +1,373 @@
+History of Changes for FreeRTOS on F&S Boards and Modules
+---------------------------------------------------------
+
+freertos-sdk-2.10.0-fsimx8mp-V2022.07.1 (28.07.2022)
+-------------------------------------------------
+Supported boards: PicoCoreMX8MP
+Not tested:       efusA9X, PicoCOMA9X, PicoCoreMX6SX, PicoCoreMX7ULP, PicoCoreMX8MM
+
+- [fsimx8mp]: Removed example cmsis_driver_examples/uart/smda_transfer
+- [fsimx8mp]: Fix warnings by the canfd and flexcan examples
+- [fsimx8mp]: Fix warnings of canfd and flexcan examples
+
+
+
+freertos-sdk-2.10.0-fsimx8mp-V2022.07 (26.07.2022)
+-------------------------------------------------
+Supported boards: PicoCoreMX8MP
+Not tested:       efusA9X, PicoCOMA9X, PicoCoreMX6SX, PicoCoreMX7ULP, PicoCoreMX8MM
+
+- [fsimx8mp]: Add I2C6 driver for I2C examples
+- [fsimx8mp]: Adjust basic board configurations
+- [fsimx8mp]: Adjust pin multiplex and correct UART for every example 
+- [fsimx8mp]: Set correct I2C, DMA and UART for the examples
+- [fsimx8mp]: Change GPIO for CAN
+- [fsimx8mp]: Minor changes regarding the prepare script, PWM and GPIO LED
+- [fsimx8mp]: Move audio  examples and gpt capture to not_tested and fix typo
+- [fsimx8mp]: Remove unnecessary files add porting_readme.txt
+- [fsimx8mp]: Minor change by example freertos_i2c
+- [fsimx8mp]: Minor changes by the flexcan examples
+- [fsimx8mp]: Minor changes by the canfd examples
+
+
+
+freertos-sdk-2.9.1-fsimx8mm-V2021.07 (30.06.2021)
+-------------------------------------------------
+Supported boards: PicoCoreMX8MM
+Not tested:       efusA9X, PicoCOMA9X, PicoCoreMX6SX, PicoCoreMX7ULP
+
+- Original NXP MCUXpresso SDK_2.9.1_MIMX8MM6xxxLZ
+- [fsimx8mm]: Remove spaces from examples of architecture fsimx8mm
+- [fsimx8mm]: Fix compilation errors of architecture fsimx8mm
+- [fsimx8mm]: Add pwm, freertos_i2c and hardware_flow_control example
+- [fsimx8mm]: Improve examples for F&S hardware
+- [fsimx8mm]: Improve build process for F&S hardware
+- [fsimx8mm]: Change RPMsg base addresses, add porting_readme.txt
+- [fsimx8mm]: Improve PWM and hardware_flow_control example. Fix prepare.sh
+- [fsimx8mm]: Move gpt_capture example to not_tested
+- [fsimx8mm]: Add entry to porting_readme.txt and fix code in freertos_i2c.c
+
+
+
+freertos-sdk-2.7.0-fsimx8mm-V2020.08 (31.08.2020)
+-------------------------------------------------
+Supported boards: PicoCoreMX8MM
+Not tested:       efusA9X, PicoCOMA9X, PicoCoreMX6SX, PicoCoreMX7ULP
+
+- Original NXP MCUXpresso SDK_2.7.0_MIMX8MM6xxxLZ
+- [fsimx8mm]: Move boards/evkmimx8mm to examples/fsimx8mm
+- [ALL]: Improve example parsing of CMakeLists.txt
+- [fsimx8mm]: Add picocoremx8mm to F&S build structure
+- [fsimx8mm]: Modify debug UART for all examples
+- [fsimx8mm]: Modify I2C for all I2C examples
+- [fsimx8mm]: move untested examples to not_tested
+- [fsimx8mm][GPT]: Modify input capture channel in the gpt_capture example
+- [fsimx8mm]: Modify dealy count for the ecspi b2b transfer examples
+- [fsimx8mm][SAI]: Add SAI driver examples
+- [fsimx8mm] Remove unnecessaryfiles like Readme.txt and xml files
+- [fsimx8mm] Change Board and Manufacturer Name
+- [fsimx8mm][tmu]: ported both tmu driver examples
+- [fsimx8mm][tmu]: ported both tmu driver examples
+- [fsimx8mm]: Adjust not_tested structure for fsimx8mm and add examples to it
+- [fsimx8mm]: make adjustments on a few files
+- [fsimx8mm]: move sai examples to not_tested.
+
+
+
+freertos-sdk-2.5.1-fsimx7ulp-V2020.03.1 (31.03.2020)
+----------------------------------------------------
+Supported boards: PicoCoreMX7ULP
+Not tested:       efusA9X, PicoCOMA9X, PicoCoreMX6SX
+
+- Improve naming of supported boards
+
+
+
+freertos-sdk-2.5.1-fsimx7ulp-V2020.03 (24.03.2020)
+--------------------------------------------------
+Supported boards: PicoCoreMX7ULP
+Not tested:       efusA9X, PicoCOMA9X, PicoCoreMX6SX
+
+- Update all working examples to current NXP MCUXpresso SDK 2.5.1
+- Update not tested examples to current NXP MCUXpresso SDK 2.5.1
+- Add new examples from NXP MCUXpresso SDK 2.5.1
+- Switch input UART clock from 80 MHz to 24 MHz
+- Improve print message of prepare script
+- Add AUD_POW_EN and M4_PER_EN pins to the pin-mux and enable them on start up
+- Improve the power off state on the 7ULP of the A7 by turning of the power supply of the LPDDR
+- Add sai driver examples and sgtl5000 codec
+- Add SGTL codec support too the power_mode_switch example
+- Fix linkerfile for hello_world_dram depending on ram size
+- Fix memory addresses of different memory types for the imx6sx examples
+- Fix the placement of the vring-buffers for the imx6sx
+- Move fs_func_gen and fs_gpio_toggle to not_tested
+- Fix compiler warnings for fsimx7ulp
+- Fix power_mode_switch example: Disable GPIO_PAD_LOW_POWER define again
+- Move some examples to not_tested folder
+- Fix compiler warnings for fsimx7ulp
+- Improve sema42 example print message
+- [fsimx7ulp][freertos_tickless]: Modify button
+- Improve naming of supported boards
+
+
+
+freertos-bsp-1.0.1-fsimx6sx-V2019.12 (20.12.2019)
+-------------------------------------------------
+Supported boards: efusA9X, PicoCOMA9X, PicoCoreMX6SX
+Not tested:       PicoCoreMX7ULP
+
+- Update all working examples to current NXP MCUXpresso SDK 2.5.1
+- Update not tested examples to current NXP MCUXpresso SDK 2.5.1
+- Add new examples from NXP MCUXpresso SDK 2.5.1
+- Switch input UART clock from 80 MHz to 24 MHz
+- Improve pinrt message of prepare script
+- Add AUD_POW_EN and M4_PER_EN pins to the pin-mux and enable them on start up
+- Improve the power off state on the 7ULP of the A7 by turning of the power
+  supply of the LPDDR
+- Add sai driver examples and sgtl5000 codec
+- Add SGTL codec support to the power_mode_switch example
+- Fix linkerfile for hello_world_dram depending on ram size
+- Fix memory addresses of different memory types for the imx6sx examples
+- Fix the placement of the vring-buffers for the imx6sx
+- Move fs_func_gen and fs_gpio_toggle to not_tested
+- fix compiler warnings for fsimx6sx
+
+
+
+freertos-fsimx7ulp-2019.02 (25.02.2019)
+---------------------------------------
+Supported Boards: PicoCoremX7ULP
+
+- Add hello_world_split_example
+- Merge branch 'temp'
+- Remove example folder
+- Move not portet examples
+- Add cmake build alls upport for 7ulp
+- Improve 7ulp make all function
+- Remove unnecessary files
+- Move board specific files for better sdk layout (imx6sx + 7ulp)
+- Improve prepare.sh and install7ulp.sh script to support new SDK layout
+- Add imx6sx nxp documentary move linux_app/ to not tested
+- Add picocoremx6sx support
+- Rename boards directory to examples
+- Remove readme.txt and xml files from the examples
+- Add and modify examples, which did not work because of Soc revision A
+- Improve binary to image conversion
+- Remove nxp evk
+- Add cmmsis examples to not tested
+- Fix qspi examples
+- Add power_mode_switch example
+- Add shell_mem example
+- Fix picocore adc build bug
+- Remove some unnecessary files
+- Add not_tested readme.txt
+
+
+
+freertos-fsimx6sx-V2.0 (09.01.2018)
+---------------------------------------------
+Supported Boards: PicoCOMA9X, efusA9X
+
+- Remove dynamically created files with path
+- Reworked fs_adc example and fixed blinking_imx example
+- Add .gitignore
+- Improved fs_adc example witch I2C connection detection
+- Fixed .gitignore
+- Fixed sema4 example for picocom
+- Fixed Blinking example
+- Fixed adc_i2c example
+- Fixed prepare.sh
+- Improved fs_adc example
+- Improved ocram examples
+- Improved GPIO an I2C configuration on efusa9x
+- Fix commpilation warning
+- Improve M4 clock-handling
+
+
+
+freertos-fsimx6sx-V1.75 (25.08.2017)
+------------------------------------
+Supported Boards: efusA9X
+                  picoCOMA9X
+
+- Readded fs_adc_i2c_rpmsg_demo.bin to the package since the linux driver
+  is ready now (->fs_rpmsg.c)
+
+
+
+freertos-fsimx6sx-V1.70 (23.08.2017)
+------------------------------------
+Supported Boards: efusA9X
+                  picoCOMA9X
+
+- Added BOARD_IC2_*_ADDR for ads7828 and pca9555 in board.h
+- Fixed debouncing in blinking_imx_demo
+- Added description for some fs_* demos
+- Changed PCA9555_WriteReg and PCA9555_ReadReg to PCA9555_ReadRegPair and so on
+  since the PCA9555 automatically writes the next data byte to the second
+  register pair
+- Both PCA9555 output register will be used now
+- Fixed chaser light for i2c imx6 driver
+- gpioSpiACs1 is the default LED for the efusa9x now
+- Initialize both flexcan shared clocks for can_wakeup
+
+
+
+freertos-fsimx6sx-V1.66 (10.08.2017)
+------------------------------------
+Supported Boards: efusA9X
+
+- Fixed GPIO_LED, which pointed to the same GPIO as
+  GPIO_KEY
+
+
+
+freertos-fsimx6sx-V1.65 (27.07.2017)
+------------------------------------
+Supported Boards: efusA9X
+                  PicoCOMA9X
+
+- Added fs_adc_i2c_rpmsg_demo which uses the I2C Extension Board over I2C and
+RPMsg to deliver ADC results to the Cortex-A9 side
+
+
+
+freertos-fsimx6sx-V1.62 (30.06.2017)
+------------------------------------
+Supported Boards: efusA9X
+                  PicoCOMA9X
+
+- Added more slave addresses to pca9555.c
+- Fixed minor bugs on initializing pca9555
+
+
+
+freertos-fsimx6sx-V1.61 (27.06.2017)
+------------------------------------
+Supported Boards: efusA9X
+                  PicoCOMA9X
+
+- Modified CMakeLists.txt to configure can_wakeup depending on chosen board
+- Fixed slave address for pca9555 device
+- Removed unnecessary slave address definitions from *_board.h
+
+
+
+freertos-fsimx6sx-V1.60 (23.06.2017)
+------------------------------------
+Supported Boards: efusA9X
+                  PicoCOMA9X
+
+- Added a FreeRTOS and Linux application which toggles a gpio when another one
+  is triggered via interrupt. This serves as a method to measure jitter between
+  reacting to the signal on the input pin and toggling the output one.
+
+
+
+freertos-fsimx6sx-V1.56 (08.06.2017)
+------------------------------------
+Supported Boards: efusA9X
+                  PicoCOMA9X
+
+- Fixed a bug in picocoma9x_board.h where the GPIO_RDCs didn't match
+  with the specification
+- Added BOARD_GPIO_UTILITY_* for the gpio_toggle demo
+
+
+
+freertos-fsimx6sx-V1.55 (07.06.2017)
+------------------------------------
+Supported Boards: efusA9X
+                  PicoCOMA9X
+
+- Fixed some issues with the install() command in CMakeLists.txt
+- Modified prepare.sh to ask user for correct path to FreeRTOS BSP
+  and save it to settings.conf
+- Removed clean.sh
+- Added clean_all.cmake as a replacement for clean.sh (make clean_all instead
+  of make && ./clean.sh now possible)
+
+
+
+freertos-fsimx6sx-V1.5 (02.06.2017)
+-----------------------------------
+Supported Boards: efusA9X
+                  PicoCOMA9X
+
+- Changed CMakeLists.txt to only produce output regarding installation
+  of bin files if they were created by make
+- make now build the install target by default
+
+
+
+freertos-fsimx6sx-V1.4 (31.05.2017)
+-----------------------------------
+Supported Boards: efusA9X
+                  PicoCOMA9X
+
+- Removed board_specific_setup.c and mpu.h
+- Fixed problem regarding RPMsg examples on boards with less than 1 GB RAM
+  by inserting LMEM_FlushSystemCache() and LMEM_InvalidateSystemCache after
+  certain memcpy()/get_*_buffer() calls
+
+
+
+freertos-fsimx6sx-V1.3 (29.05.2017)
+-----------------------------------
+Supported Boards: efusA9X
+                  PicoCOMA9X
+
+- Added a CMakeLists.txt, preprare.sh and clean.sh script
+  to simplify the build process
+- Modified porting_info.c and board_specific_setup.c to comply
+  with CMakeLists.txt. VRING*_BASE and BOARD_SIZE are set via prepare.sh
+
+freertos-fsimx6sx-V1.2 (10.05.2017)
+-----------------------------------
+Supported Boards: efusA9X
+                  PicoCOMA9X
+
+- Added more predefined GPIOs to gpio_pin.*
+- Reintroduced configure_gpio_pin()
+
+
+
+freertos-fsimx6sx-V1.1 (20.04.2017)
+-----------------------------------
+Supported Boards: efusA9X
+                  PicoCOMA9X
+
+- Added missing iomux configurations to pin_mux.c
+- Ported pin_mux.c from efusA9X to PicoCOMA9X
+
+
+
+freertos-fsimx6sx-V1.0 (19.04.2017)
+-----------------------------------
+Supported Boards: efusA9X
+
+- Added i2c_extension_board_demo to demo_apps, which interacts with I2C
+  Extension Board
+- Added i2c_interrupt_extension_board_imx6sx and i2_polling_extension_
+  board_imx6sx to i2c_imx in driver_examples
+
+freertos-fsimx6sx-V0.7 (12.04.2017)
+-----------------------------------
+Supported Boards: efusA9X
+
+- Ported pingpong_* and str_echo_* RPMsg examples
+- Modified U-Boot to leave some space at the end of the DRAM for the
+  VRINGs required by RPMsg
+
+
+
+freertos-fsimx6sx-V0.5 (24.03.2017)
+-----------------------------------
+Supported Boards: efusA9X
+
+- Ported hello_world*, blinking_imx_demo, can_wakeup, periodic_wfi_tcm,
+  sema4_demo, adc_imx6sx, epit, flexcan*, gpio_imx and uart* examples
+  to efusA9x
+- Add set_iomux() macro to make IOMUX configuration more similar to
+  Linux (with imx6sx_iomuxc_pins.h)
+- Modified board.*, pin_mux.* and gpio_pin.* to comply with efusA9X
