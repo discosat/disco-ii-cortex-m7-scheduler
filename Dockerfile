@@ -16,9 +16,9 @@ RUN curl -L "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.
     && rm gcc-arm-none-eabi.tar.bz2
 ENV ARMGCC_DIR=/usr/local/arm/gcc-arm-none-eabi-10.3-2021.10
 
-COPY fsimx8mp-m7-sdk /freertos-fus-pre
+COPY fsimx8mp-m7-sdk /fsimx8mp-m7-sdk
 
-WORKDIR /freertos-fus-pre
+WORKDIR /fsimx8mp-m7-sdk
 
 RUN /bin/bash -c "./prepare.sh" <<EOF
 1

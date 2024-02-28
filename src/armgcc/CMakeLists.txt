@@ -1,5 +1,5 @@
 # CROSS COMPILER SETTING
-SET(CMAKE_SYSTEM_NAME Generic)
+SET(CMAKE_SYSTEM_NAME FreeRTOS)
 CMAKE_MINIMUM_REQUIRED (VERSION 3.10.0)
 
 # THE VERSION NUMBER
@@ -17,30 +17,35 @@ SET(CMAKE_EXECUTABLE_LIBRARY_SUFFIX)
 
 # CURRENT DIRECTORY
 SET(ProjDirPath /tmp-src/armgcc)
-SET(BaseDirPath /freertos-fus-pre)
+SET(BaseDirPath /fsimx8mp-m7-sdk)
 
 #SET(EXECUTABLE_OUTPUT_PATH ${ProjDirPath}/${CMAKE_BUILD_TYPE})
 SET(LIBRARY_OUTPUT_PATH ${ProjDirPath}/${CMAKE_BUILD_TYPE})
 
+project(disco_scheduler)
 
-project(hello_world)
-
-set(MCUX_SDK_PROJECT_NAME hello_world.elf)
+set(MCUX_SDK_PROJECT_NAME disco_scheduler.elf)
 
 include(${ProjDirPath}/flags.cmake)
 
 include(${ProjDirPath}/config.cmake)
 
 add_executable(${MCUX_SDK_PROJECT_NAME} 
-"${ProjDirPath}/../hello_world.c"
+"${ProjDirPath}/../main.c"
+"${ProjDirPath}/../FreeRTOSConfig.h"
 "${ProjDirPath}/../pin_mux.c"
 "${ProjDirPath}/../pin_mux.h"
+"${ProjDirPath}/../rpmsg_config.h"
+"${ProjDirPath}/../rsc_table.c"
+"${ProjDirPath}/../rsc_table.h"
+"${ProjDirPath}/../remoteproc.h"
+"${ProjDirPath}/../lpm.c"
+"${ProjDirPath}/../lpm.h"
 "${ProjDirPath}/../board.c"
 "${ProjDirPath}/../board.h"
 "${ProjDirPath}/../clock_config.c"
 "${ProjDirPath}/../clock_config.h"
 "${ProjDirPath}/../fsl_iomuxc.h"
-"${ProjDirPath}/../empty_rsc_table.c"
 )
 
 target_include_directories(${MCUX_SDK_PROJECT_NAME} PRIVATE
@@ -48,6 +53,8 @@ target_include_directories(${MCUX_SDK_PROJECT_NAME} PRIVATE
 )
 
 set(CMAKE_MODULE_PATH
+    ${BaseDirPath}/middleware/multicore
+    ${BaseDirPath}/rtos/freertos
     ${BaseDirPath}/devices/MIMX8ML8/drivers
     ${BaseDirPath}/devices/MIMX8ML8
     ${BaseDirPath}/devices/MIMX8ML8/utilities
@@ -58,11 +65,21 @@ set(CMAKE_MODULE_PATH
 )
 
 # include modules
+include(middleware_multicore_rpmsg_lite_imx8mp_m7_freertos_MIMX8ML8)
+
+include(middleware_freertos-kernel_heap_4_MIMX8ML8)
+
 include(driver_clock_MIMX8ML8)
+
+include(driver_mu_MIMX8ML8)
+
+include(middleware_freertos-kernel_MIMX8ML8)
 
 include(driver_common_MIMX8ML8)
 
 include(driver_rdc_MIMX8ML8)
+
+include(driver_gpt_MIMX8ML8)
 
 include(driver_audiomix_MIMX8ML8)
 
@@ -84,9 +101,13 @@ include(device_MIMX8ML8_startup_MIMX8ML8)
 
 include(utility_assert_MIMX8ML8)
 
-include(utilities_misc_utilities_MIMX8ML8)
+include(middleware_multicore_rpmsg_lite_MIMX8ML8)
+
+include(middleware_freertos-kernel_extension_MIMX8ML8)
 
 include(CMSIS_Include_core_cm_MIMX8ML8)
+
+include(utilities_misc_utilities_MIMX8ML8)
 
 include(device_MIMX8ML8_system_MIMX8ML8)
 
@@ -104,5 +125,5 @@ target_link_libraries(${MCUX_SDK_PROJECT_NAME} PRIVATE nosys)
 TARGET_LINK_LIBRARIES(${MCUX_SDK_PROJECT_NAME} PRIVATE -Wl,--end-group)
 
 ADD_CUSTOM_COMMAND(TARGET ${MCUX_SDK_PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_OBJCOPY}
--Obinary ${EXECUTABLE_OUTPUT_PATH}/${MCUX_SDK_PROJECT_NAME} ${EXECUTABLE_OUTPUT_PATH}/hello_world.bin)
+-Obinary ${EXECUTABLE_OUTPUT_PATH}/${MCUX_SDK_PROJECT_NAME} ${EXECUTABLE_OUTPUT_PATH}/disco_scheduler.bin)
 

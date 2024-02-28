@@ -121,10 +121,7 @@ SET(CMAKE_C_FLAGS_DEBUG " \
     ${CMAKE_C_FLAGS_DEBUG} \
     -DDEBUG \
     -DCPU_MIMX8ML8DVNLZ \
-    -DPRINTF_FLOAT_ENABLE=0 \
-    -DSCANF_FLOAT_ENABLE=0 \
-    -DPRINTF_ADVANCED_ENABLE=0 \
-    -DSCANF_ADVANCED_ENABLE=0 \
+    -DSDK_OS_FREE_RTOS \
     -DSERIAL_PORT_TYPE_UART=1 \
     -DMCUXPRESSO_SDK \
     -g \
@@ -149,10 +146,7 @@ SET(CMAKE_C_FLAGS_RELEASE " \
     ${CMAKE_C_FLAGS_RELEASE} \
     -DNDEBUG \
     -DCPU_MIMX8ML8DVNLZ \
-    -DPRINTF_FLOAT_ENABLE=0 \
-    -DSCANF_FLOAT_ENABLE=0 \
-    -DPRINTF_ADVANCED_ENABLE=0 \
-    -DSCANF_ADVANCED_ENABLE=0 \
+    -DSDK_OS_FREE_RTOS \
     -DSERIAL_PORT_TYPE_UART=1 \
     -DMCUXPRESSO_SDK \
     -Os \
@@ -176,10 +170,7 @@ SET(CMAKE_C_FLAGS_DDR_DEBUG " \
     ${CMAKE_C_FLAGS_DDR_DEBUG} \
     -DDEBUG \
     -DCPU_MIMX8ML8DVNLZ \
-    -DPRINTF_FLOAT_ENABLE=0 \
-    -DSCANF_FLOAT_ENABLE=0 \
-    -DPRINTF_ADVANCED_ENABLE=0 \
-    -DSCANF_ADVANCED_ENABLE=0 \
+    -DSDK_OS_FREE_RTOS \
     -DSERIAL_PORT_TYPE_UART=1 \
     -DMCUXPRESSO_SDK \
     -g \
@@ -204,10 +195,7 @@ SET(CMAKE_C_FLAGS_DDR_RELEASE " \
     ${CMAKE_C_FLAGS_DDR_RELEASE} \
     -DNDEBUG \
     -DCPU_MIMX8ML8DVNLZ \
-    -DPRINTF_FLOAT_ENABLE=0 \
-    -DSCANF_FLOAT_ENABLE=0 \
-    -DPRINTF_ADVANCED_ENABLE=0 \
-    -DSCANF_ADVANCED_ENABLE=0 \
+    -DSDK_OS_FREE_RTOS \
     -DSERIAL_PORT_TYPE_UART=1 \
     -DMCUXPRESSO_SDK \
     -Os \
@@ -232,10 +220,7 @@ SET(CMAKE_C_FLAGS_FLASH_DEBUG " \
     -DDEBUG \
     -DFLASH_TARGET \
     -DCPU_MIMX8ML8DVNLZ \
-    -DPRINTF_FLOAT_ENABLE=0 \
-    -DSCANF_FLOAT_ENABLE=0 \
-    -DPRINTF_ADVANCED_ENABLE=0 \
-    -DSCANF_ADVANCED_ENABLE=0 \
+    -DSDK_OS_FREE_RTOS \
     -DSERIAL_PORT_TYPE_UART=1 \
     -DMCUXPRESSO_SDK \
     -g \
@@ -261,10 +246,7 @@ SET(CMAKE_C_FLAGS_FLASH_RELEASE " \
     -DNDEBUG \
     -DFLASH_TARGET \
     -DCPU_MIMX8ML8DVNLZ \
-    -DPRINTF_FLOAT_ENABLE=0 \
-    -DSCANF_FLOAT_ENABLE=0 \
-    -DPRINTF_ADVANCED_ENABLE=0 \
-    -DSCANF_ADVANCED_ENABLE=0 \
+    -DSDK_OS_FREE_RTOS \
     -DSERIAL_PORT_TYPE_UART=1 \
     -DMCUXPRESSO_SDK \
     -Os \
@@ -460,6 +442,10 @@ SET(CMAKE_EXE_LINKER_FLAGS_DEBUG " \
     muldefs \
     -Xlinker \
     -Map=output.map \
+    -Xlinker \
+    --defsym=__stack_size__=0x400 \
+    -Xlinker \
+    --defsym=__heap_size__=0x400 \
     -T${ProjDirPath}/MIMX8ML8xxxxx_cm7_ram.ld -static \
 ")
 SET(CMAKE_EXE_LINKER_FLAGS_RELEASE " \
@@ -488,6 +474,10 @@ SET(CMAKE_EXE_LINKER_FLAGS_RELEASE " \
     muldefs \
     -Xlinker \
     -Map=output.map \
+    -Xlinker \
+    --defsym=__stack_size__=0x400 \
+    -Xlinker \
+    --defsym=__heap_size__=0x400 \
     -T${ProjDirPath}/MIMX8ML8xxxxx_cm7_ram.ld -static \
 ")
 SET(CMAKE_EXE_LINKER_FLAGS_DDR_DEBUG " \
@@ -517,6 +507,10 @@ SET(CMAKE_EXE_LINKER_FLAGS_DDR_DEBUG " \
     muldefs \
     -Xlinker \
     -Map=output.map \
+    -Xlinker \
+    --defsym=__stack_size__=0x400 \
+    -Xlinker \
+    --defsym=__heap_size__=0x400 \
     -T${ProjDirPath}/MIMX8ML8xxxxx_cm7_ddr_ram.ld -static \
 ")
 SET(CMAKE_EXE_LINKER_FLAGS_DDR_RELEASE " \
@@ -545,6 +539,10 @@ SET(CMAKE_EXE_LINKER_FLAGS_DDR_RELEASE " \
     muldefs \
     -Xlinker \
     -Map=output.map \
+    -Xlinker \
+    --defsym=__stack_size__=0x400 \
+    -Xlinker \
+    --defsym=__heap_size__=0x400 \
     -T${ProjDirPath}/MIMX8ML8xxxxx_cm7_ddr_ram.ld -static \
 ")
 SET(CMAKE_EXE_LINKER_FLAGS_FLASH_DEBUG " \
@@ -574,6 +572,10 @@ SET(CMAKE_EXE_LINKER_FLAGS_FLASH_DEBUG " \
     muldefs \
     -Xlinker \
     -Map=output.map \
+    -Xlinker \
+    --defsym=__stack_size__=0x400 \
+    -Xlinker \
+    --defsym=__heap_size__=0x400 \
     -T${ProjDirPath}/MIMX8ML8xxxxx_cm7_flash.ld -static \
 ")
 SET(CMAKE_EXE_LINKER_FLAGS_FLASH_RELEASE " \
@@ -602,5 +604,9 @@ SET(CMAKE_EXE_LINKER_FLAGS_FLASH_RELEASE " \
     muldefs \
     -Xlinker \
     -Map=output.map \
+    -Xlinker \
+    --defsym=__stack_size__=0x400 \
+    -Xlinker \
+    --defsym=__heap_size__=0x400 \
     -T${ProjDirPath}/MIMX8ML8xxxxx_cm7_flash.ld -static \
 ")
