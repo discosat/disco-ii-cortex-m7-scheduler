@@ -15,9 +15,9 @@ SET(CMAKE_STATIC_LIBRARY_SUFFIX)
 SET(CMAKE_EXECUTABLE_LIBRARY_PREFIX)
 SET(CMAKE_EXECUTABLE_LIBRARY_SUFFIX)
 
-# CURRENT DIRECTORY
-SET(ProjDirPath /tmp-src/armgcc)
-SET(BaseDirPath /fsimx8mp-m7-sdk)
+SET(RepoRoot /disco-ii-cortex-m7-scheduler)
+SET(ProjDirPath ${RepoRoot}/src/armgcc)
+SET(BaseDirPath ${RepoRoot}/fsimx8mp-m7-sdk)
 
 #SET(EXECUTABLE_OUTPUT_PATH ${ProjDirPath}/${CMAKE_BUILD_TYPE})
 SET(LIBRARY_OUTPUT_PATH ${ProjDirPath}/${CMAKE_BUILD_TYPE})

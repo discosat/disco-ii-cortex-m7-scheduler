@@ -5,5 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./bin:/output/bin
-      - ./src:/src
+      - ./bin:/disco-ii-cortex-m7-scheduler/bin
+      - ./include:/disco-ii-cortex-m7-scheduler/include
+      - ./lib:/disco-ii-cortex-m7-scheduler/lib
+      - ./src:/tmp-src

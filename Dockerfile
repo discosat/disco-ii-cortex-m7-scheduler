@@ -16,20 +16,22 @@ RUN curl -L "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.
     && rm gcc-arm-none-eabi.tar.bz2
 ENV ARMGCC_DIR=/usr/local/arm/gcc-arm-none-eabi-10.3-2021.10
 
-COPY fsimx8mp-m7-sdk /fsimx8mp-m7-sdk
+ENV REPO_ROOT=/disco-ii-cortex-m7-scheduler
 
-WORKDIR /fsimx8mp-m7-sdk
+COPY fsimx8mp-m7-sdk /${REPO_ROOT}/fsimx8mp-m7-sdk
+
+WORKDIR /${REPO_ROOT}/fsimx8mp-m7-sdk
 
 RUN /bin/bash -c "./prepare.sh" <<EOF
 1
 d
 EOF
 
-RUN mkdir /tmp-src
-CMD cp -r /src/* /tmp-src \
-    && cd /tmp-src/armgcc \
+RUN mkdir -p ${REPO_ROOT}/src
+CMD cp -r /tmp-src/* ${REPO_ROOT}/src \
+    && cd ${REPO_ROOT}/src/armgcc \
     && ./build.sh \
-    && if [ -d "/output/bin/debug" ]; then rm -r /output/bin/debug; fi \
-    && if [ -d "/output/bin/release" ]; then rm -r /output/bin/release; fi \
-    && mv debug /output/bin \
-    && mv release /output/bin
+    && if [ -d "${REPO_ROOT}/bin/debug" ]; then rm -r ${REPO_ROOT}/bin/debug; fi \
+    && if [ -d "${REPO_ROOT}/bin/release" ]; then rm -r ${REPO_ROOT}/bin/release; fi \
+    && mv debug ${REPO_ROOT}/bin \
+    && mv release ${REPO_ROOT}/bin
