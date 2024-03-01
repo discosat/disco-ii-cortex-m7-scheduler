@@ -23,15 +23,10 @@ COPY fsimx8mp-m7-sdk /${REPO_ROOT}/fsimx8mp-m7-sdk
 WORKDIR /${REPO_ROOT}/fsimx8mp-m7-sdk
 
 RUN /bin/bash -c "./prepare.sh" <<EOF
-1
+6
 d
 EOF
 
 RUN mkdir -p ${REPO_ROOT}/src
-CMD cp -r /tmp-src/* ${REPO_ROOT}/src \
-    && cd ${REPO_ROOT}/src/armgcc \
-    && ./build.sh \
-    && if [ -d "${REPO_ROOT}/bin/debug" ]; then rm -r ${REPO_ROOT}/bin/debug; fi \
-    && if [ -d "${REPO_ROOT}/bin/release" ]; then rm -r ${REPO_ROOT}/bin/release; fi \
-    && mv debug ${REPO_ROOT}/bin \
-    && mv release ${REPO_ROOT}/bin
+
+CMD chmod +x /tmp-src/armgcc/build-service-start.sh && /tmp-src/armgcc/build-service-start.sh
