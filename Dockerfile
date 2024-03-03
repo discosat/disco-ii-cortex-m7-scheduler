@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     bash \
     make \
     cmake \
+    patch \
     ca-certificates \
     --no-install-recommends && rm -rf /var/lib/apt/lists/*
 

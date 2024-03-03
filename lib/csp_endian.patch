@@ -1,0 +1,10 @@
+--- /disco-ii-cortex-m7-scheduler/lib/csp/include/csp/csp.h	2024-03-03 02:07:25.750586932 +0100
++++ /disco-ii-cortex-m7-scheduler/lib/csp/include/csp/csp.h	2024-03-03 02:07:27.142591825 +0100
+@@ -12,6 +12,7 @@
+ #include <csp/csp_iflist.h>
+ #include <csp/csp_sfp.h>
+ #include <csp/csp_promisc.h>
++#include "endian_adapter.h"
+ 
+ #ifdef __cplusplus
+ extern "C" {

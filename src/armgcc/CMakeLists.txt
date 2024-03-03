@@ -46,6 +46,12 @@ set(SchedulerSources
     ${RepoRoot}/src/clock_config.c
     ${RepoRoot}/src/clock_config.h
     ${RepoRoot}/src/fsl_iomuxc.h
+    ${RepoRoot}/src/hooks.c
+    ${RepoRoot}/src/network_config.c
+    ${RepoRoot}/src/param_config.c
+    ${RepoRoot}/src/serial.c
+    ${RepoRoot}/src/si_lock.c
+    ${RepoRoot}/src/vmem_config.c
 )
 
 set(CSPLibPath ${RepoRoot}/lib/csp)
@@ -119,8 +125,8 @@ set(PARAM_STORE_LOG OFF CACHE BOOL "Log parameter store operations")
 set(PARAM_HAVE_SYS_QUEUE OFF CACHE BOOL "Have system queue")
 set(PARAM_LIST_DYNAMIC OFF CACHE BOOL "List dynamic parameters")
 set(PARAM_LIST_POOL OFF CACHE BOOL "List pool parameters")
-set(PARAM_HAVE_SCHEDULER OFF CACHE BOOL "Have scheduler")
-set(PARAM_HAVE_COMMANDS OFF CACHE BOOL "Have commands")
+set(PARAM_HAVE_SCHEDULER ON CACHE BOOL "Have scheduler")
+set(PARAM_HAVE_COMMANDS ON CACHE BOOL "Have commands")
 set(MPACK_FLOAT 0 CACHE STRING "MPACK float support")
 set(MPACK_STDIO 0 CACHE STRING "MPACK stdio support")
 
@@ -160,12 +166,6 @@ set(ParamLibSources
     ${ParamLibPath}/src/objstore/objstore.c
 )
 
-if(PARAM_HAVE_FOPEN)
-    list(APPEND ParamLibSources
-        ${ParamLibPath}/src/vmem/vmem_file.c
-    )
-endif()
-
 if(PARAM_HAVE_SCHEDULER)
     list(APPEND ParamLibSources
         ${ParamLibPath}/src/param/scheduler/param_scheduler.c
@@ -186,6 +186,7 @@ ${ParamLibSources}
 target_compile_definitions(${MCUX_SDK_PROJECT_NAME} PRIVATE CSP_FREERTOS=1)
 
 target_include_directories(${MCUX_SDK_PROJECT_NAME} PRIVATE
+    ${RepoRoot}/include
     ${RepoRoot}/src
     ${CSPLibPath}/include
     ${CSPLibPath}/src

@@ -45,7 +45,7 @@
 #define configTICK_RATE_HZ                      ((TickType_t)1000)
 #define configMAX_PRIORITIES                    5
 #define configMINIMAL_STACK_SIZE                ((unsigned short)90)
-#define configMAX_TASK_NAME_LEN                 10
+#define configMAX_TASK_NAME_LEN                 20
 #define configUSE_16_BIT_TICKS                  0
 #define configIDLE_SHOULD_YIELD                 1
 #define configUSE_TASK_NOTIFICATIONS            1
@@ -66,7 +66,7 @@
 #define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 1
 
 /* Memory allocation related definitions. */
-#define configSUPPORT_STATIC_ALLOCATION         0
+#define configSUPPORT_STATIC_ALLOCATION         1
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
 #define configTOTAL_HEAP_SIZE                   ((size_t)(40 * 1024))
 #define configAPPLICATION_ALLOCATED_HEAP        0
