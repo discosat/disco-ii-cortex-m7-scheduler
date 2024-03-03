@@ -52,6 +52,8 @@ set(SchedulerSources
     ${RepoRoot}/src/serial.c
     ${RepoRoot}/src/si_lock.c
     ${RepoRoot}/src/vmem_config.c
+    ${RepoRoot}/src/kiss_iface.c
+    ${RepoRoot}/src/csp_hook_fsl_mx8mp_m7.c
 )
 
 set(CSPLibPath ${RepoRoot}/lib/csp)
@@ -96,7 +98,6 @@ set(CSPLibSources
     ${CSPLibPath}/src/csp_services.c
     ${CSPLibPath}/src/csp_rdp.c
     ${CSPLibPath}/src/csp_rdp_queue.c
-    # ${CSPLibPath}/src/csp_sfp.c
 
     ${CSPLibPath}/src/arch/freertos/csp_queue.c
     ${CSPLibPath}/src/arch/freertos/csp_clock.c
@@ -107,7 +108,6 @@ set(CSPLibSources
     ${CSPLibPath}/src/crypto/csp_hmac.c
     ${CSPLibPath}/src/crypto/csp_sha1.c
 
-    # ${CSPLibPath}/src/drivers/can/can_socketcan.c
     ${CSPLibPath}/src/drivers/usart/usart_kiss.c
 
     ${CSPLibPath}/src/interfaces/csp_if_lo.c
@@ -212,6 +212,8 @@ include(middleware_multicore_rpmsg_lite_imx8mp_m7_freertos_MIMX8ML8)
 include(middleware_freertos-kernel_heap_4_MIMX8ML8)
 
 include(driver_clock_MIMX8ML8)
+
+include(driver_iuart_sdma_MIMX8ML8)
 
 include(driver_mu_MIMX8ML8)
 

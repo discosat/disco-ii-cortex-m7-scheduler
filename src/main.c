@@ -13,6 +13,9 @@ StaticTask_t xIdleTaskTCB;
 StackType_t uxIdleTaskStack[configMINIMAL_STACK_SIZE];
 StaticTask_t xTimerTaskTCB;
 StackType_t uxTimerTaskStack[configTIMER_TASK_STACK_DEPTH];
+
+StaticTask_t xMainTaskTCB;
+StackType_t uxMainTaskStack[configMINIMAL_STACK_SIZE + 100];
 static TaskHandle_t main_task_handle = NULL;
 
 void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize)
@@ -30,11 +33,11 @@ void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackT
 }
 
 static void main_task(void *pvParameters) {
-	if (setup_network()) {
-		PRINTF("Network setup failed\r\n");
-	};
+    if (setup_network()) {
+        PRINTF("Network setup failed\r\n");
+    };
 
-	// for (;;)
+    // for (;;)
     // {
     //     PRINTF("Configuration done - Main task launched\r\n");
     //     vTaskDelay(portMAX_DELAY);
@@ -55,7 +58,16 @@ int main(void)
 
     // TODO: initialize RNG ?
 
-    if (xTaskCreate(main_task, "MAIN_TASK", configMINIMAL_STACK_SIZE + 100, NULL, tskIDLE_PRIORITY + 1U, &main_task_handle) != pdPASS) {
+    main_task_handle = xTaskCreateStatic(
+        main_task,
+        "MAIN_TASK",
+        sizeof(uxMainTaskStack) / sizeof(StackType_t),
+        NULL,
+        tskIDLE_PRIORITY + 1U,
+        uxMainTaskStack,
+        &xMainTaskTCB
+    );
+    if (main_task_handle == NULL) {
         (void)PRINTF("\r\nFailed to create main task\r\n");
         for (;;) {}
     }

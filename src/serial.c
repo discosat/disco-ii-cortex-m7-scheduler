@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #include <param/param.h>
 
 uint32_t _serial0;
