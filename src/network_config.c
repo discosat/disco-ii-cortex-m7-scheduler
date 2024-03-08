@@ -11,7 +11,7 @@
 #include "hooks.h"
 #include "vmem_config.h"
 #include "param_config.h"
-#include "kiss_iface.h"
+#include "can_iface.h"
 
 StaticTask_t xVmemServerTaskTCB;
 StackType_t uxVmemServerTaskStack[1024];
@@ -37,7 +37,7 @@ void router_task(void *pvParameters) {
     return NULL;
 }
 
-static void onehz_task(void *pvParameters) {
+void onehz_task(void *pvParameters) {
     TickType_t xLastWakeTime = xTaskGetTickCount();
     while (1) {
         // TODO: Consider adding watchdog timer and feed here (maybe also other places?)
@@ -47,7 +47,7 @@ static void onehz_task(void *pvParameters) {
     return NULL;
 }
 
-static void setup_csp_tasks(void) {
+void setup_csp_tasks(void) {
     vmem_server_task_handle = xTaskCreateStatic(
         vmem_server_task,
         "VMEM_SERVER_TASK",
@@ -89,16 +89,6 @@ static void setup_csp_tasks(void) {
     }
 }
 
-// static void iface_can_init(void) {
-//     csp_iface_t* iface;
-//     // CAN init - csp_can_add_interface ?
-// 
-//     iface->is_default = ;
-//     iface->addr = ;
-//     iface->netmask = ;
-//     iface->name = "CAN";
-// }
-
 int setup_network(void) {
     csp_conf.hostname = "DISCO-II-scheduler";
     csp_conf.model = "PicoCoreMX8MP-Cortex-M7";
@@ -107,17 +97,10 @@ int setup_network(void) {
 	csp_conf.dedup = CSP_DEDUP_OFF;
 
     csp_init();
-    
+
     csp_cmp_set_memcpy((csp_memcpy_fnc_t) vmem_memcpy);
 
-    // iface_can_init();
-
-    kiss_uart_init();
-    iface_kiss_init();
-
-    // TODO: maybe ?
-    // csp_rt_init();
-    // csp_rtable_set(0, 0, csp_iflist_get_by_index(dfl_if), CSP_NO_VIA_ADDRESS);
+    iface_can_init();
 
     setup_csp_tasks();
 

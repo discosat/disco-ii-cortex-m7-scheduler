@@ -43,8 +43,11 @@ void BOARD_InitBootPins(void)
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', coreID: m7}
 - pin_list:
-  - {pin_num: AJ5, peripheral: UART4, signal: uart_rx, pin_signal: UART4_RXD, PE: Enabled, HYS: CMOS, PUE: Weak_Pull_Up, FSEL: Slow, DSE: X1}
-  - {pin_num: AH5, peripheral: UART4, signal: uart_tx, pin_signal: UART4_TXD, PE: Enabled, HYS: CMOS, PUE: Weak_Pull_Up, FSEL: Slow, DSE: X1}
+  - {pin_num: AD18, peripheral: FLEXCAN1, signal: can_rx, pin_signal: SPDIF_RX, PUE: Weak_Pull_Up, FSEL: Fast, DSE: X4}
+  - {pin_num: AE18, peripheral: FLEXCAN1, signal: can_tx, pin_signal: SPDIF_TX, PUE: Weak_Pull_Up, FSEL: Fast, DSE: X4}
+  - {pin_num: AJ5, peripheral: UART4, signal: uart_rx, pin_signal: UART4_RXD, PUE: Weak_Pull_Up, DSE: X6}
+  - {pin_num: AH5, peripheral: UART4, signal: uart_tx, pin_signal: UART4_TXD, PUE: Weak_Pull_Up, DSE: X6}
+  - {pin_num: AC18, peripheral: GPIO5, signal: 'gpio_io, 05', pin_signal: SPDIF_EXT_CLK, PUE: Weak_Pull_Up}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 
@@ -55,12 +58,29 @@ BOARD_InitPins:
  *
  * END ****************************************************************************************************************/
 void BOARD_InitPins(void) {                                /*!< Function assigned for the core: Cortex-M7F[m7] */
-    IOMUXC_SetPinMux(IOMUXC_SAI2_RXFS_UART1_TX, 0U);
-    IOMUXC_SetPinConfig(IOMUXC_SAI2_RXFS_UART1_TX,
+    IOMUXC_SetPinMux(IOMUXC_GPIO1_IO10_GPIO1_IO10, 0U);
+    IOMUXC_SetPinConfig(IOMUXC_GPIO1_IO10_GPIO1_IO10,
+                        IOMUXC_SW_PAD_CTL_PAD_DSE(3U) |
+                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
+    IOMUXC_SetPinMux(IOMUXC_HDMI_DDC_SDA_CAN1_RX, 0U);
+    IOMUXC_SetPinConfig(IOMUXC_HDMI_DDC_SDA_CAN1_RX,
+                        IOMUXC_SW_PAD_CTL_PAD_DSE(1U) |
+                        IOMUXC_SW_PAD_CTL_PAD_FSEL_MASK |
+                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
+    IOMUXC_SetPinMux(IOMUXC_HDMI_DDC_SCL_CAN1_TX, 0U);
+    IOMUXC_SetPinConfig(IOMUXC_HDMI_DDC_SCL_CAN1_TX,
+                        IOMUXC_SW_PAD_CTL_PAD_DSE(1U) |
+                        IOMUXC_SW_PAD_CTL_PAD_FSEL_MASK |
                         IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
                         IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
     IOMUXC_SetPinMux(IOMUXC_SAI2_RXC_UART1_RX, 0U);
     IOMUXC_SetPinConfig(IOMUXC_SAI2_RXC_UART1_RX,
+                        IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+                        IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
+    IOMUXC_SetPinMux(IOMUXC_SAI2_RXFS_UART1_TX, 0U);
+    IOMUXC_SetPinConfig(IOMUXC_SAI2_RXFS_UART1_TX,
                         IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
                         IOMUXC_SW_PAD_CTL_PAD_PE_MASK);
 }

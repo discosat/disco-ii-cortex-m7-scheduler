@@ -52,6 +52,7 @@ set(SchedulerSources
     ${RepoRoot}/src/serial.c
     ${RepoRoot}/src/si_lock.c
     ${RepoRoot}/src/vmem_config.c
+    ${RepoRoot}/src/can_iface.c
     ${RepoRoot}/src/kiss_iface.c
     ${RepoRoot}/src/csp_hook_fsl_mx8mp_m7.c
 )
@@ -212,6 +213,8 @@ include(middleware_multicore_rpmsg_lite_imx8mp_m7_freertos_MIMX8ML8)
 include(middleware_freertos-kernel_heap_4_MIMX8ML8)
 
 include(driver_clock_MIMX8ML8)
+
+include(driver_flexcan_MIMX8ML8)
 
 include(driver_iuart_sdma_MIMX8ML8)
 
