@@ -7,7 +7,6 @@
 #include <csp/csp_id.h>
 #include <csp/interfaces/csp_if_can.h>
 
-#include "clock_config.h"
 #include "can_iface.h"
 
 #define CSPCAN FLEXCAN1
@@ -21,19 +20,19 @@
 #define PROMISCUOUS_MODE (0)
 
 flexcan_handle_t flexcanHandle;
-volatile bool wokenUp = false;
 volatile bool rxComplete = true;
-flexcan_mb_transfer_t rxXfer;
+SemaphoreHandle_t txInitSemaphore, txCompleteSemaphore;
+flexcan_mb_transfer_t rxXfer, txXfer;
 flexcan_frame_t txFrame, rxFrame;
 
 static StaticTask_t xCANTaskTCB;
 static StackType_t uxCANTaskStack[1024];
 static TaskHandle_t can_task_handle = NULL;
 
-static int csp_can_tx_func(void *driver_data, uint32_t id, const uint8_t * data, uint8_t dlc);
+static int csp_can_tx_frame(void *driver_data, uint32_t id, const uint8_t * data, uint8_t dlc);
 
 csp_can_interface_data_t ifdata = {
-    .tx_func = csp_can_tx_func,
+    .tx_func = csp_can_tx_frame,
     .pbufs = NULL,
 };
 
@@ -47,6 +46,18 @@ csp_iface_t csp_if_can = {
 static FLEXCAN_CALLBACK(flexcan_callback) {
     int xTaskWoken = pdFALSE;
     switch (status) {
+        case kStatus_FLEXCAN_TxIdle:
+            if (TX_MESSAGE_BUFFER_NUM == result) {
+                xSemaphoreGiveFromISR(txCompleteSemaphore, &xTaskWoken);
+            }
+            break;
+
+        case kStatus_FLEXCAN_TxBusy:
+            if (TX_MESSAGE_BUFFER_NUM == result) {
+                xSemaphoreGiveFromISR(txCompleteSemaphore, &xTaskWoken);
+            }
+            break;
+
         case kStatus_FLEXCAN_RxIdle:
             if (RX_MESSAGE_BUFFER_NUM == result) {
                 rxComplete = true;
@@ -60,45 +71,50 @@ static FLEXCAN_CALLBACK(flexcan_callback) {
                 rxComplete = true;
             }
 
-        case kStatus_FLEXCAN_WakeUp:
-            wokenUp = true;
-            break;
-
         default:
+            // Maybe release locks here ?
             PRINTF("status: %d, result: %d\r\n", status, result);
             break;
     }
     portYIELD_FROM_ISR(xTaskWoken);
 }
 
-static int csp_can_tx_func(void *driver_data, uint32_t id, const uint8_t * data, uint8_t dlc) {
-    uint8_t bytesSent = 0;
+static int csp_can_tx_frame(void *driver_data, uint32_t id, const uint8_t * data, uint8_t dlc) {
+    if (xSemaphoreTake(txInitSemaphore, pdMS_TO_TICKS(1000)) != pdTRUE) {
+        return CSP_ERR_TX;
+    }
 
-    while (bytesSent < dlc) {
-        for (uint8_t i = 0; i < 8 && i < (dlc - bytesSent); i++) {
-            switch(i) {
-                case 0: txFrame.dataByte0 = data[bytesSent + i]; break;
-                case 1: txFrame.dataByte1 = data[bytesSent + i]; break;
-                case 2: txFrame.dataByte2 = data[bytesSent + i]; break;
-                case 3: txFrame.dataByte3 = data[bytesSent + i]; break;
-                case 4: txFrame.dataByte4 = data[bytesSent + i]; break;
-                case 5: txFrame.dataByte5 = data[bytesSent + i]; break;
-                case 6: txFrame.dataByte6 = data[bytesSent + i]; break;
-                case 7: txFrame.dataByte7 = data[bytesSent + i]; break;
-            }
+    for (uint8_t i = 0; i < dlc; i++) {
+        switch(i) {
+            case 0: txFrame.dataByte0 = data[i]; break;
+            case 1: txFrame.dataByte1 = data[i]; break;
+            case 2: txFrame.dataByte2 = data[i]; break;
+            case 3: txFrame.dataByte3 = data[i]; break;
+            case 4: txFrame.dataByte4 = data[i]; break;
+            case 5: txFrame.dataByte5 = data[i]; break;
+            case 6: txFrame.dataByte6 = data[i]; break;
+            case 7: txFrame.dataByte7 = data[i]; break;
         }
+    }
 
-        txFrame.id = FLEXCAN_ID_EXT(id);
-        txFrame.format = (uint8_t)kFLEXCAN_FrameFormatExtend;
-        txFrame.type = (uint8_t)kFLEXCAN_FrameTypeData;
-        txFrame.length = (dlc - bytesSent) < 8 ? dlc - bytesSent : 8;
+    txFrame.id = FLEXCAN_ID_EXT(id);
+    txFrame.format = (uint8_t)kFLEXCAN_FrameFormatExtend;
+    txFrame.type = (uint8_t)kFLEXCAN_FrameTypeData;
+    txFrame.length = dlc;
 
-        status_t txStatus = FLEXCAN_TransferSendBlocking(CSPCAN, (uint8_t)TX_MESSAGE_BUFFER_NUM, &txFrame);  // Using blocking transfer since it suffices for now and non-blocking would be fairly complex and prone to error because of the discprency between CAN frame size and the size of CSP packets
-        if (txStatus == kStatus_Fail) {
-            return CSP_ERR_TX;
-        }
+    txXfer.mbIdx = (uint8_t)TX_MESSAGE_BUFFER_NUM;
+    txXfer.frame = &txFrame;
 
-        bytesSent += txFrame.length;
+    status_t txStatus = FLEXCAN_TransferSendNonBlocking(CSPCAN, &flexcanHandle, &txXfer);
+
+    if (xSemaphoreTake(txCompleteSemaphore, pdMS_TO_TICKS(5000)) != pdTRUE) {
+        xSemaphoreGive(txInitSemaphore);
+        return CSP_ERR_TX;
+    }
+
+    xSemaphoreGive(txInitSemaphore);
+    if (txStatus == kStatus_Fail) {
+        return CSP_ERR_TX;
     }
 
     return CSP_ERR_NONE;
@@ -111,8 +127,6 @@ static void can_task(void *pvParameters) {
 
     while(1) {
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-
-        if (wokenUp) {}  // TODO: do something with this ?
 
         if (rxComplete) {
             (void)FLEXCAN_TransferReceiveNonBlocking(CSPCAN, &flexcanHandle, &rxXfer);
@@ -132,6 +146,9 @@ static void can_task(void *pvParameters) {
 csp_iface_t * iface_can_init(void) {    
     flexcan_config_t flexcanConfig;
     flexcan_rx_mb_config_t mbConfig;
+    txInitSemaphore = xSemaphoreCreateBinary();
+    txCompleteSemaphore = xSemaphoreCreateBinary();
+    xSemaphoreGive(txInitSemaphore);
 
     CLOCK_SetRootMux(kCLOCK_RootFlexCan1, kCLOCK_FlexCanRootmuxSysPll1);
     CLOCK_SetRootDivider(kCLOCK_RootFlexCan1, 2U, 5U);
@@ -177,7 +194,7 @@ csp_iface_t * iface_can_init(void) {
         "CAN_TASK",
         sizeof(uxCANTaskStack) / sizeof(StackType_t),
         NULL,
-        tskIDLE_PRIORITY + 3U,  // decrease to 3U?
+        tskIDLE_PRIORITY + 3U,
         uxCANTaskStack,
         &xCANTaskTCB
     );
