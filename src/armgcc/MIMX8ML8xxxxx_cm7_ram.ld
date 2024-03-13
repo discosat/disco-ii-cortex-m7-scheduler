@@ -33,9 +33,9 @@ STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x400;
 MEMORY
 {
   m_interrupts          (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00000400
-  m_text                (RX)  : ORIGIN = 0x00000400, LENGTH = 0x0001FC00
-  m_data                (RW)  : ORIGIN = 0x20000000, LENGTH = 0x00020000
-  m_data2               (RW)  : ORIGIN = 0x80000000, LENGTH = 0x01000000
+  itcm                  (RX)  : ORIGIN = 0x00000400, LENGTH = 0x0001FC00
+  dtcm                  (RW)  : ORIGIN = 0x20000000, LENGTH = 0x00020000
+  ddr                   (RW)  : ORIGIN = 0x80000000, LENGTH = 0x01000000
 }
 
 /* Define output sections */
@@ -56,7 +56,7 @@ SECTIONS
     . = ALIGN(8);
     KEEP(*(.resource_table)) /* Resource table */
     . = ALIGN(8);
-  } > m_text
+  } > itcm
 
   /* The program code and other data goes into internal RAM */
   .text :
@@ -72,19 +72,19 @@ SECTIONS
     KEEP (*(.init))
     KEEP (*(.fini))
     . = ALIGN(4);
-  } > m_text
+  } > itcm
 
   .ARM.extab :
   {
     *(.ARM.extab* .gnu.linkonce.armextab.*)
-  } > m_text
+  } > itcm
 
   .ARM :
   {
     __exidx_start = .;
     *(.ARM.exidx*)
     __exidx_end = .;
-  } > m_text
+  } > itcm
 
  .ctors :
   {
@@ -108,7 +108,7 @@ SECTIONS
     KEEP (*(SORT(.ctors.*)))
     KEEP (*(.ctors))
     __CTOR_END__ = .;
-  } > m_text
+  } > itcm
 
   .dtors :
   {
@@ -119,14 +119,14 @@ SECTIONS
     KEEP (*(SORT(.dtors.*)))
     KEEP (*(.dtors))
     __DTOR_END__ = .;
-  } > m_text
+  } > itcm
 
   .preinit_array :
   {
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
-  } > m_text
+  } > itcm
 
   .init_array :
   {
@@ -134,7 +134,7 @@ SECTIONS
     KEEP (*(SORT(.init_array.*)))
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
-  } > m_text
+  } > itcm
 
   .fini_array :
   {
@@ -142,7 +142,7 @@ SECTIONS
     KEEP (*(SORT(.fini_array.*)))
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
-  } > m_text
+  } > itcm
 
   __etext = .;    /* define a global symbol at end of code */
   __DATA_ROM = .; /* Symbol is used by startup for data initialization */
@@ -155,9 +155,20 @@ SECTIONS
     *(.data)                 /* .data sections */
     *(.data*)                /* .data* sections */
     KEEP(*(.jcr*))
+
+    . = ALIGN(4);
+    __start_param = .;
+    KEEP(*(param))
+    __stop_param = .;
+
+    . = ALIGN(4);
+    __start_vmem = .;
+    KEEP(*(vmem))
+    __stop_vmem = .;
+
     . = ALIGN(4);
     __data_end__ = .;        /* define a global symbol at data end */
-  } > m_data
+  } > dtcm
 
   __CACHE_REGION_START = ORIGIN(m_interrupts);
   __CACHE_REGION_SIZE  = 0;
@@ -169,7 +180,7 @@ SECTIONS
     *(NonCacheable.init)
     . = ALIGN(4);
     __noncachedata_init_end__ = .;   /* create a global symbol at initialized ncache data end */
-  } > m_data2
+  } > ddr
 
   . = __noncachedata_init_end__;
   .ncache :
@@ -177,11 +188,11 @@ SECTIONS
     *(NonCacheable)
     . = ALIGN(4);
     __noncachedata_end__ = .;     /* define a global symbol at ncache data end */
-  } > m_data2
+  } > ddr
 
   __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
-  text_end = ORIGIN(m_text) + LENGTH(m_text);
-  ASSERT(__DATA_END <= text_end, "region m_text overflowed with text and data")
+  text_end = ORIGIN(itcm) + LENGTH(itcm);
+  ASSERT(__DATA_END <= text_end, "region itcm overflowed with text and data")
 
   /* Uninitialized data section */
   .bss :
@@ -196,7 +207,7 @@ SECTIONS
     . = ALIGN(4);
     __bss_end__ = .;
     __END_BSS = .;
-  } > m_data
+  } > dtcm
 
   .heap :
   {
@@ -207,23 +218,23 @@ SECTIONS
     . += HEAP_SIZE;
     __HeapLimit = .;
     __heap_limit = .; /* Add for _sbrk */
-  } > m_data
+  } > dtcm
 
 
   .stack :
   {
     . = ALIGN(8);
     . += STACK_SIZE;
-  } > m_data
+  } > dtcm
 
 
   /* Initializes stack on the end of block */
-  __StackTop   = ORIGIN(m_data) + LENGTH(m_data);
+  __StackTop   = ORIGIN(dtcm) + LENGTH(dtcm);
   __StackLimit = __StackTop - STACK_SIZE;
   PROVIDE(__stack = __StackTop);
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 
-  ASSERT(__StackLimit >= __HeapLimit, "region m_data overflowed with stack and heap")
+  ASSERT(__StackLimit >= __HeapLimit, "region dtcm overflowed with stack and heap")
 }
 

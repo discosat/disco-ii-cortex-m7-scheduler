@@ -3,8 +3,8 @@ SET(CMAKE_SYSTEM_NAME Generic)
 CMAKE_MINIMUM_REQUIRED (VERSION 3.10.0)
 
 # THE VERSION NUMBER
-SET (Tutorial_VERSION_MAJOR 1)
-SET (Tutorial_VERSION_MINOR 0)
+SET (VERSION_MAJOR 1)
+SET (VERSION_MINOR 0)
 
 # ENABLE ASM
 ENABLE_LANGUAGE(ASM)
@@ -53,7 +53,6 @@ set(SchedulerSources
     ${RepoRoot}/src/si_lock.c
     ${RepoRoot}/src/vmem_config.c
     ${RepoRoot}/src/can_iface.c
-    ${RepoRoot}/src/kiss_iface.c
     ${RepoRoot}/src/csp_hook_fsl_mx8mp_m7.c
 )
 
@@ -215,8 +214,6 @@ include(middleware_freertos-kernel_heap_4_MIMX8ML8)
 include(driver_clock_MIMX8ML8)
 
 include(driver_flexcan_MIMX8ML8)
-
-include(driver_iuart_sdma_MIMX8ML8)
 
 include(driver_mu_MIMX8ML8)
 
