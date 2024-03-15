@@ -24,7 +24,7 @@ PARAM_DEFINE_STATIC_VMEM(
     PARAMID_GNSS_READING,
     gnss_reading,
     PARAM_TYPE_DOUBLE, // Verify double-precision float works
-    8, // 2 doubles
+    2, // 2 doubles
     1,
     PM_READONLY,
     NULL,
