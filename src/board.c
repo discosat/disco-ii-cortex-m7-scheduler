@@ -190,3 +190,21 @@ void BOARD_RdcInit(void)
     CLOCK_ControlGate(kCLOCK_AudioPll2Gate, kCLOCK_ClockNeededAll); /* Enable the CCGR gate for AudioPLL2 in Domain 1 */
     CLOCK_ControlGate(kCLOCK_VideoPll1Gate, kCLOCK_ClockNeededAll); /* Enable the CCGR gate for VideoPLL1 in Domain 1 */
 }
+
+void BOARD_PeripheralRdcSetting(void)
+{
+    rdc_domain_assignment_t assignment = {0};
+    rdc_periph_access_config_t periphConfig;
+
+    assignment.domainId = BOARD_DOMAIN_ID;
+
+    /* Only configure the RDC if the RDC peripheral write access is allowed. */
+    if ((0x1U & RDC_GetPeriphAccessPolicy(RDC, kRDC_Periph_RDC, assignment.domainId)) != 0U)
+    {
+        RDC_GetDefaultPeriphAccessConfig(&periphConfig);
+        /* Do not allow the A53 domain(domain0) to access the following peripherals */
+        periphConfig.policy = RDC_DISABLE_A53_ACCESS;
+        periphConfig.periph = kRDC_Periph_CAN_FD1;
+        RDC_SetPeriphAccessConfig(RDC, &periphConfig);
+    }
+}

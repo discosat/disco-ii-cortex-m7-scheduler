@@ -2,7 +2,7 @@
 #include "vmem_config.h"
 #include "gnss.h"
 #include "tmu.h"
-#include "wake_a53_service.h"
+#include "a53_comm_service.h"
 
 /*
 PARAM_DEFINE_STATIC_VMEM(

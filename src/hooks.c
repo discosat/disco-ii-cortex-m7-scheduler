@@ -1,6 +1,7 @@
 #pragma once
 #include "tmu.h"
 #include "param_config.h"
+#include "a53_comm_service.h"
 
 void hook_onehz(void) {
     // TODO: poll GNSS
@@ -17,4 +18,5 @@ void hook_onehz(void) {
 
 void hook_init(void) {
     tmu_init();
+    a53_service_init();
 }

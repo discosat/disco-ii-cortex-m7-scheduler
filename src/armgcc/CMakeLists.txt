@@ -55,6 +55,7 @@ set(SchedulerSources
     ${RepoRoot}/src/can_iface.c
     ${RepoRoot}/src/csp_hook_fsl_mx8mp_m7.c
     ${RepoRoot}/src/tmu.c
+    ${RepoRoot}/src/a53_comm_service.c
 )
 
 set(CSPLibPath ${RepoRoot}/lib/csp)
