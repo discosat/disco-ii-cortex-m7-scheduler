@@ -4,60 +4,40 @@
 #include "tmu.h"
 #include "sys_comm_service.h"
 
-/*
-PARAM_DEFINE_STATIC_VMEM(
-    id,           // unique parameter id, from param_config.h
-    name,         // param_t variable name, from param_config.h
-    type,         // Available types in enum param_type_e in param.h
-    array_count,  // Number of elements/(bytes?) in the array. -1 for single values
-    array_step,   // ??maybe element size in bytes. 0 for single values, 1 for arrays
-    flags,        // See param.h; PM_SYSCONF for system/network config, PM_CONF for user config, PM_READONLY for read-only
-    callback,     // Callback function for when the value is set
-    unit,         // ?? Possibly the unit of the value, e.g. "m/s"
-    vmem_name,    // Name of the vmem, without "vmem_" prefix Defined in vmem_config.h. Initialized in main.c
-    vmem_address, // Offset in the vmem, from vmem_config.h
-    docstr        // Documentation string (for param info)
-)
-*/
+/* System registers */
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPC__SLPCR, GPC__SLPCR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &GPC->SLPCR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPC__LPCR_A53_BSC, GPC__LPCR_A53_BSC, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &GPC->LPCR_A53_BSC, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPC__LPCR_A53_AD, GPC__LPCR_A53_AD, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &GPC->LPCR_A53_AD, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPC__LPCR_M7, GPC__LPCR_M7, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &GPC->LPCR_M7, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPC__MLPCR, GPC__MLPCR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &GPC->MLPCR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPC_PGC__A53SCU_PUPSCR, GPC_PGC__A53SCU_PUPSCR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &GPC_PGC->A53SCU_PUPSCR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPIO1__DR, GPIO1__DR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_GPIO1__DR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPIO1__GDIR, GPIO1__GDIR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_GPIO1__GDIR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPIO2__DR, GPIO2__DR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_GPIO2__DR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPIO2__GDIR, GPIO2__GDIR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_GPIO2__GDIR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPIO3__GDIR, GPIO3__GDIR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_GPIO3__GDIR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPIO4__GDIR, GPIO4__GDIR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_GPIO4__GDIR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_GPIO5__GDIR, GPIO5__GDIR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_GPIO5__GDIR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_MUB__SR, MUB__SR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_MUB__SR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_RDC__STAT, RDC__STAT, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_RDC__STAT, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_TMU__TSCR, TMU__TSCR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_TMU__TSCR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_TMU__TRITSR, TMU__TRITSR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_TMU__TRITSR, NULL);
+PARAM_DEFINE_STATIC_RAM(PARAMID_TMU__TRATSR, TMU__TRATSR, PARAM_TYPE_UINT32, -1, 0, PM_READONLY, NULL, "", &_TMU__TRATSR, NULL);
 
-PARAM_DEFINE_STATIC_VMEM(
-    PARAMID_GNSS_READING,
-    gnss_reading,
-    PARAM_TYPE_DOUBLE, // Verify double-precision float works
-    2, // 2 doubles
-    1,
-    PM_READONLY,
-    NULL,
-    "N, E",
-    config,
-    VMEM_CONF_GNSS_READING,
-    "GNSS GPS coordinates"
-);
+/* Application parameters */
+PARAM_DEFINE_STATIC_VMEM(PARAMID_GNSS_READING, gnss_reading, PARAM_TYPE_DOUBLE, 2, 8, PM_READONLY, NULL, "N, E", config, VMEM_CONF_GNSS_READING, "GNSS GPS coordinates");
+PARAM_DEFINE_STATIC_VMEM(PARAMID_TMU_READING, tmu_reading, PARAM_TYPE_UINT16, -1, 0, PM_READONLY, NULL, "K", config, VMEM_CONF_TMU_READING, "TMU temperature reading");
+PARAM_DEFINE_STATIC_VMEM(PARAMID_WAKE_A53, wake_a53, PARAM_TYPE_UINT8, -1, 0, PM_CONF, wake_a53_callback, NULL, config, VMEM_CONF_WAKE_A53, "Send wake signal to A53 peer core");
+PARAM_DEFINE_STATIC_VMEM(PARAMID_A53_STATUS, a53_status, PARAM_TYPE_UINT8, -1, 0, PM_READONLY, NULL, NULL, config, VMEM_CONF_A53_STATUS, "A53 peer core status");
 
-PARAM_DEFINE_STATIC_VMEM(
-    PARAMID_TMU_READING,
-    tmu_reading,
-    PARAM_TYPE_UINT16,
-    -1,
-    0,
-    PM_READONLY,
-    NULL,
-    "K",
-    config,
-    VMEM_CONF_TMU_READING,
-    "TMU temperature reading"
-);
-
-PARAM_DEFINE_STATIC_VMEM(
-    PARAMID_WAKE_A53,
-    wake_a53,
-    PARAM_TYPE_UINT8,
-    -1,
-    0,
-    PM_CONF,
-    wake_a53_callback,
-    NULL,
-    config,
-    VMEM_CONF_WAKE_A53,
-    "Send wake signal to A53 peer core"
-);
+/* General purpose registers */
+PARAM_DEFINE_STATIC_RAM(PARAM_ID_UINT8,  p_uint8, PARAM_TYPE_UINT8, 32, 1, PM_CONF, NULL, NULL, _p_uint8, "uint8 array (32)");
+PARAM_DEFINE_STATIC_RAM(PARAM_ID_UINT16, p_uint16, PARAM_TYPE_UINT16, 32, 2, PM_CONF, NULL, NULL, _p_uint16, "uint16 array (32)");
+PARAM_DEFINE_STATIC_RAM(PARAM_ID_UINT32, p_uint32, PARAM_TYPE_UINT32, 32, 4, PM_CONF, NULL, NULL, _p_uint32, "uint32 array (32)");
+PARAM_DEFINE_STATIC_RAM(PARAM_ID_UINT64, p_uint64, PARAM_TYPE_UINT64, 32, 8, PM_CONF, NULL, NULL, _p_uint64, "uint64 array (32)");
+PARAM_DEFINE_STATIC_RAM(PARAM_ID_INT8,   p_int8, PARAM_TYPE_INT8, 32, 1, PM_CONF, NULL, NULL, _p_int8, "int8 array (32)");
+PARAM_DEFINE_STATIC_RAM(PARAM_ID_INT16,  p_int16, PARAM_TYPE_INT16, 32, 2, PM_CONF, NULL, NULL, _p_int16, "int16 array (32)");
+PARAM_DEFINE_STATIC_RAM(PARAM_ID_INT32,  p_int32, PARAM_TYPE_INT32, 32, 4, PM_CONF, NULL, NULL, _p_int32, "int32 array (32)");
+PARAM_DEFINE_STATIC_RAM(PARAM_ID_INT64,  p_int64, PARAM_TYPE_INT64, 32, 8, PM_CONF, NULL, NULL, _p_int64, "int64 array (32)");
+PARAM_DEFINE_STATIC_RAM(PARAM_ID_FLOAT,  p_float, PARAM_TYPE_FLOAT, 32, 4, PM_CONF, NULL, NULL, _p_float, "float array (32)");
+PARAM_DEFINE_STATIC_RAM(PARAM_ID_DOUBLE, p_double, PARAM_TYPE_DOUBLE, 16, 8, PM_CONF, NULL, NULL, _p_double, "double array (16)");
