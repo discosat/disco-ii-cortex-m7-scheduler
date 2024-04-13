@@ -35,10 +35,6 @@ set(SchedulerSources
     ${RepoRoot}/src/FreeRTOSConfig.h
     ${RepoRoot}/src/pin_mux.c
     ${RepoRoot}/src/pin_mux.h
-    ${RepoRoot}/src/rpmsg_config.h
-    ${RepoRoot}/src/rsc_table.c
-    ${RepoRoot}/src/rsc_table.h
-    ${RepoRoot}/src/remoteproc.h
     ${RepoRoot}/src/lpm.c
     ${RepoRoot}/src/lpm.h
     ${RepoRoot}/src/board.c
@@ -55,7 +51,7 @@ set(SchedulerSources
     ${RepoRoot}/src/can_iface.c
     ${RepoRoot}/src/csp_hook_fsl_mx8mp_m7.c
     ${RepoRoot}/src/tmu.c
-    ${RepoRoot}/src/a53_comm_service.c
+    ${RepoRoot}/src/sys_comm_service.c
 )
 
 set(CSPLibPath ${RepoRoot}/lib/csp)
@@ -125,7 +121,7 @@ set(PARAM_STORE_FILE OFF CACHE BOOL "Store parameters in file")
 set(PARAM_STORE_VMEM ON CACHE BOOL "Store parameters in virtual memory")
 set(PARAM_STORE_LOG OFF CACHE BOOL "Log parameter store operations")
 set(PARAM_HAVE_SYS_QUEUE OFF CACHE BOOL "Have system queue")
-set(PARAM_LIST_DYNAMIC OFF CACHE BOOL "List dynamic parameters")
+set(PARAM_LIST_DYNAMIC ON CACHE BOOL "List dynamic parameters")
 set(PARAM_LIST_POOL OFF CACHE BOOL "List pool parameters")
 set(PARAM_HAVE_SCHEDULER ON CACHE BOOL "Have scheduler")
 set(PARAM_HAVE_COMMANDS ON CACHE BOOL "Have commands")
@@ -209,8 +205,6 @@ set(CMAKE_MODULE_PATH
 )
 
 # include modules
-include(middleware_multicore_rpmsg_lite_imx8mp_m7_freertos_MIMX8ML8)
-
 include(middleware_freertos-kernel_heap_4_MIMX8ML8)
 
 include(driver_clock_MIMX8ML8)
@@ -248,8 +242,6 @@ include(driver_iuart_MIMX8ML8)
 include(device_MIMX8ML8_startup_MIMX8ML8)
 
 include(utility_assert_MIMX8ML8)
-
-include(middleware_multicore_rpmsg_lite_MIMX8ML8)
 
 include(middleware_freertos-kernel_extension_MIMX8ML8)
 
