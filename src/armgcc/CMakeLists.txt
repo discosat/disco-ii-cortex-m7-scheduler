@@ -176,12 +176,30 @@ if(PARAM_HAVE_COMMANDS)
     )
 endif()
 
+set(CSPProcLibPath ${RepoRoot}/lib/csp_proc)
+set(CSPProcLibSources
+    ${CSPProcLibPath}/src/proc_pack.c
+    ${CSPProcLibPath}/src/proc_server.c
+    ${CSPProcLibPath}/src/store/proc_store_static.c
+    ${CSPProcLibPath}/src/platform/proc_memory_FreeRTOS.c
+    ${CSPProcLibPath}/src/platform/proc_mutex_FreeRTOS.c
+    ${CSPProcLibPath}/src/runtime/proc_runtime_instructions_common.c
+    ${CSPProcLibPath}/src/runtime/proc_runtime_instructions_FreeRTOS.c
+    ${CSPProcLibPath}/src/runtime/proc_runtime_FreeRTOS.c
+    ${CSPProcLibPath}/src/proc_analyze.c
+)
+
 add_executable(${MCUX_SDK_PROJECT_NAME} 
 ${SchedulerSources}
 ${CSPLibSources}
 ${ParamLibSources}
+${CSPProcLibSources}
 )
 target_compile_definitions(${MCUX_SDK_PROJECT_NAME} PRIVATE CSP_FREERTOS=1)
+target_compile_definitions(${MCUX_SDK_PROJECT_NAME} PRIVATE MAX_INSTRUCTIONS=50)
+target_compile_definitions(${MCUX_SDK_PROJECT_NAME} PRIVATE MAX_PROC_SLOT=50)
+target_compile_definitions(${MCUX_SDK_PROJECT_NAME} PRIVATE RESERVED_PROC_SLOTS=25)
+
 
 target_include_directories(${MCUX_SDK_PROJECT_NAME} PRIVATE
     ${RepoRoot}/include
@@ -190,6 +208,7 @@ target_include_directories(${MCUX_SDK_PROJECT_NAME} PRIVATE
     ${CSPLibPath}/src
     ${ParamLibPath}/include
     ${ParamLibPath}/src
+    ${CSPProcLibPath}/include
     /usr/local/arm/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine
 )
 set(CMAKE_MODULE_PATH

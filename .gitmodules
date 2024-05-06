@@ -4,3 +4,6 @@
 [submodule "lib/param"]
 	path = lib/param
 	url = https://github.com/spaceinventor/libparam
+[submodule "lib/csp_proc"]
+	path = lib/csp_proc
+	url = https://github.com/discosat/csp_proc.git
