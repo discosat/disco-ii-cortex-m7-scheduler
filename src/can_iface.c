@@ -19,6 +19,8 @@
 #define TX_MESSAGE_BUFFER_NUM (8)
 #define PROMISCUOUS_MODE (0)
 
+#define ACQUIRE_TX_LOCK_TIMEOUT_MS 5000
+
 flexcan_handle_t flexcanHandle;
 volatile bool rxComplete = true;
 SemaphoreHandle_t txInitSemaphore, txCompleteSemaphore;
@@ -46,19 +48,27 @@ csp_iface_t csp_if_can = {
 static FLEXCAN_CALLBACK(flexcan_callback) {
     int xTaskWoken = pdFALSE;
     switch (status) {
-        case kStatus_FLEXCAN_TxIdle:
-            if (TX_MESSAGE_BUFFER_NUM == result) {
-                xSemaphoreGiveFromISR(txCompleteSemaphore, &xTaskWoken);
-            }
-            break;
-
         case kStatus_FLEXCAN_TxBusy:
             if (TX_MESSAGE_BUFFER_NUM == result) {
                 xSemaphoreGiveFromISR(txCompleteSemaphore, &xTaskWoken);
             }
+            FLEXCAN_ClearStatusFlags(CSPCAN, FLEXCAN_ERROR_AND_STATUS_INIT_FLAG); // FLEXCAN_ERROR_AND_STATUS_INIT_FLAG covers all relevant interrupt flags (excluding the wake up flag)
+            break;
+
+        case kStatus_FLEXCAN_TxIdle:
+        case kStatus_FLEXCAN_TxSwitchToRx:
+            if (TX_MESSAGE_BUFFER_NUM == result) {
+                xSemaphoreGiveFromISR(txCompleteSemaphore, &xTaskWoken);
+            }
+            break;
+
+        case kStatus_FLEXCAN_RxBusy:
+        case kStatus_FLEXCAN_RxFifoBusy:
+            FLEXCAN_ClearStatusFlags(CSPCAN, FLEXCAN_ERROR_AND_STATUS_INIT_FLAG);
             break;
 
         case kStatus_FLEXCAN_RxIdle:
+        case kStatus_FLEXCAN_RxFifoIdle:
             if (RX_MESSAGE_BUFFER_NUM == result) {
                 rxComplete = true;
                 vTaskNotifyGiveFromISR(can_task_handle, &xTaskWoken); // Deferred parsing of the frame
@@ -66,21 +76,51 @@ static FLEXCAN_CALLBACK(flexcan_callback) {
             break;
 
         case kStatus_FLEXCAN_RxOverflow:
-            // TODO: error code to CSP ?
+        case kStatus_FLEXCAN_RxFifoOverflow:
             if (RX_MESSAGE_BUFFER_NUM == result) {
                 rxComplete = true;
+                vTaskNotifyGiveFromISR(can_task_handle, &xTaskWoken);
             }
+            FLEXCAN_ClearStatusFlags(CSPCAN, FLEXCAN_ERROR_AND_STATUS_INIT_FLAG);
+            break;
 
+        case kStatus_FLEXCAN_RxFifoWarning:
+            FLEXCAN_ClearStatusFlags(CSPCAN, FLEXCAN_ERROR_AND_STATUS_INIT_FLAG);
+            break;
+
+        case kStatus_FLEXCAN_ErrorStatus:
+            FLEXCAN_ClearStatusFlags(CSPCAN, FLEXCAN_ERROR_AND_STATUS_INIT_FLAG);
+            break;
+
+        case kStatus_FLEXCAN_WakeUp:
+            FLEXCAN_ClearStatusFlags(CSPCAN, FLEXCAN_WAKE_UP_FLAG);
+            break;
+
+        case kStatus_FLEXCAN_RxRemote:
+            // TODO: handle
+            break;
+
+#if (defined(FSL_FEATURE_FLEXCAN_HAS_ENHANCED_RX_FIFO) && FSL_FEATURE_FLEXCAN_HAS_ENHANCED_RX_FIFO)
+        case kStatus_FLEXCAN_RxFifoUnderflow:
+            FLEXCAN_ClearStatusFlags(CSPCAN, FLEXCAN_WAKE_UP_FLAG);
+            break;
+#endif
+
+        case kStatus_FLEXCAN_UnHandled:
         default:
-            // Maybe release locks here ?
-            PRINTF("status: %d, result: %d\r\n", status, result);
+            FLEXCAN_ClearStatusFlags(CSPCAN, (uint32_t)(-1));
+            // Release locks on unhandled case
+            rxComplete = true;
+            xSemaphoreGiveFromISR(txCompleteSemaphore, &xTaskWoken);
+            vTaskNotifyGiveFromISR(can_task_handle, &xTaskWoken);
+            csp_print("status: %d, result: %d\r\n", status, result);
             break;
     }
     portYIELD_FROM_ISR(xTaskWoken);
 }
 
 static int csp_can_tx_frame(void *driver_data, uint32_t id, const uint8_t * data, uint8_t dlc) {
-    if (xSemaphoreTake(txInitSemaphore, pdMS_TO_TICKS(1000)) != pdTRUE) {
+    if (xSemaphoreTake(txInitSemaphore, pdMS_TO_TICKS(ACQUIRE_TX_LOCK_TIMEOUT_MS)) != pdTRUE) {
         return CSP_ERR_TX;
     }
 
@@ -107,7 +147,7 @@ static int csp_can_tx_frame(void *driver_data, uint32_t id, const uint8_t * data
 
     status_t txStatus = FLEXCAN_TransferSendNonBlocking(CSPCAN, &flexcanHandle, &txXfer);
 
-    if (xSemaphoreTake(txCompleteSemaphore, pdMS_TO_TICKS(5000)) != pdTRUE) {
+    if (xSemaphoreTake(txCompleteSemaphore, pdMS_TO_TICKS(ACQUIRE_TX_LOCK_TIMEOUT_MS)) != pdTRUE) {
         xSemaphoreGive(txInitSemaphore);
         return CSP_ERR_TX;
     }
