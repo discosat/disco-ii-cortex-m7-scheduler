@@ -59,15 +59,29 @@ extern param_t TMU__TRATSR;
 
 
 /* Application parameters */
-extern param_t gnss_reading;
-extern param_t tmu_reading;
 extern param_t wake_a53;
 extern param_t a53_status;
+extern param_t tmu_reading;
+extern param_t gnss_lat;
+extern param_t gnss_lon;
+extern param_t gnss_age;
+extern param_t gnss_date;
+extern param_t gnss_time;
+extern param_t gnss_speed;
+extern param_t gnss_alt;
+extern param_t gnss_course;
 
-#define PARAMID_GNSS_READING 21
-#define PARAMID_TMU_READING 22
-#define PARAMID_WAKE_A53 23
-#define PARAMID_A53_STATUS 24
+#define PARAMID_WAKE_A53 21
+#define PARAMID_A53_STATUS 22
+#define PARAMID_TMU_READING 23
+#define PARAMID_GNSS_LAT 24
+#define PARAMID_GNSS_LON 25
+#define PARAMID_GNSS_AGE 26
+#define PARAMID_GNSS_DATE 27
+#define PARAMID_GNSS_TIME 28
+#define PARAMID_GNSS_SPEED 29
+#define PARAMID_GNSS_ALT 30
+#define PARAMID_GNSS_COURSE 31
 
 
 /* General purpose registers */

@@ -204,5 +204,8 @@ void BOARD_PeripheralRdcSetting(void)
 
         periphConfig.periph = kRDC_Periph_UART1;
         RDC_SetPeriphAccessConfig(RDC, &periphConfig);
+
+        periphConfig.periph = kRDC_Periph_UART3;
+        RDC_SetPeriphAccessConfig(RDC, &periphConfig);
     }
 }

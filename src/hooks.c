@@ -1,4 +1,6 @@
 #pragma once
+
+#include "gnss.h"
 #include "tmu.h"
 #include "param_config.h"
 #include "sys_comm_service.h"
@@ -8,8 +10,13 @@
 static int a53_enter_suspend_flag = 1;
 
 void hook_onehz(void) {
-    // TODO: poll GNSS
+    // GNSS
+    int ret = gnss_poll();
+    if (ret != 0) {
+        // TODO: handle error
+    }
 
+    // TMU
     status_t tmu_status;
     int8_t temp = poll_tmu(&tmu_status);
     if (tmu_status != kStatus_Success) {
@@ -19,6 +26,7 @@ void hook_onehz(void) {
         param_set_uint16(&tmu_reading, temp_K);
     }
 
+    // Power / clocks management
     param_set_uint8(&a53_status, (GPC->SLPCR & GPC_SLPCR_EN_DSM_MASK) >> GPC_SLPCR_EN_DSM_SHIFT ? 0 : 1);
     if (param_get_uint8(&a53_status) == 0) {
         if (a53_enter_suspend_flag) {
@@ -48,6 +56,7 @@ void hook_onehz(void) {
 }
 
 void hook_init(void) {
+    gnss_init();
     tmu_init();
     sys_comm_service_init();
 }

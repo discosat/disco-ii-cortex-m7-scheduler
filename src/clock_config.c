@@ -43,8 +43,11 @@ void BOARD_BootClockRUN(void)
     CLOCK_SetRootDivider(kCLOCK_RootAhb, 1U, 1U);                   /* Set root clock freq to 133M / 1= 133MHZ */
     CLOCK_SetRootMux(kCLOCK_RootAhb, kCLOCK_AhbRootmuxSysPll1Div6); /* switch AHB to SYSTEM PLL1 DIV6 */
 
-    CLOCK_SetRootMux(kCLOCK_RootUart1, kCLOCK_UartRootmuxSysPll1Div10); /* Set UART source to SysPLL1 Div10 80MHZ */
+    CLOCK_SetRootMux(kCLOCK_RootUart1, kCLOCK_UartRootmuxSysPll1Div10); /* Set UART1 source to SysPLL1 Div10 80MHZ */
     CLOCK_SetRootDivider(kCLOCK_RootUart1, 1U, 1U);                     /* Set root clock to 80MHZ/ 1= 80MHZ */
+
+    CLOCK_SetRootMux(kCLOCK_RootUart3, kCLOCK_UartRootmuxSysPll1Div10); /* Set UART3 source to SysPLL1 Div10 80MHZ */
+    CLOCK_SetRootDivider(kCLOCK_RootUart3, 1U, 1U);                     /* Set root clock to 80MHZ/ 1= 80MHZ */
 
     CLOCK_EnableClock(kCLOCK_Rdc);   /* Enable RDC clock */
     CLOCK_EnableClock(kCLOCK_Ocram); /* Enable Ocram clock */
@@ -67,4 +70,7 @@ void BOARD_BootClockRUN(void)
 void BOARD_A53WFIClockReenable(void) {
     CLOCK_SetRootMux(kCLOCK_RootUart1, kCLOCK_UartRootmuxSysPll1Div10);
     CLOCK_SetRootDivider(kCLOCK_RootUart1, 1U, 1U);
+
+    CLOCK_SetRootMux(kCLOCK_RootUart3, kCLOCK_UartRootmuxSysPll1Div10);
+    CLOCK_SetRootDivider(kCLOCK_RootUart3, 1U, 1U);
 }

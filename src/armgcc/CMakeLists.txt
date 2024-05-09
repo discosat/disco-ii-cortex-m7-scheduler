@@ -39,6 +39,7 @@ set(SchedulerSources
     ${RepoRoot}/src/board.c
     ${RepoRoot}/src/clock_config.c
     ${RepoRoot}/src/fsl_iomuxc.h
+    ${RepoRoot}/src/gnss.c
     ${RepoRoot}/src/hooks.c
     ${RepoRoot}/src/network_config.c
     ${RepoRoot}/src/param_config.c
@@ -47,6 +48,7 @@ set(SchedulerSources
     ${RepoRoot}/src/vmem_config.c
     ${RepoRoot}/src/can_iface.c
     ${RepoRoot}/src/csp_hook_fsl_mx8mp_m7.c
+    ${RepoRoot}/src/tinygps.c
     ${RepoRoot}/src/tmu.c
     ${RepoRoot}/src/sys_comm_service.c
 )
