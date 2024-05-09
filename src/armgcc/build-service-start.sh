@@ -15,8 +15,8 @@ set -e
 # Remove temporary patches
 patch -R ${REPO_ROOT}/lib/csp/include/csp/csp.h < ${REPO_ROOT}/lib/csp_endian.patch
 
-if [ -d "${REPO_ROOT}/bin/debug" ]; then rm -r ${REPO_ROOT}/bin/debug; fi
 if [ -d "${REPO_ROOT}/bin/release" ]; then rm -r ${REPO_ROOT}/bin/release; fi
 
-mv debug ${REPO_ROOT}/bin
-mv release ${REPO_ROOT}/bin
+mv release/* ${REPO_ROOT}/bin
+
+echo "Application binary is now available in the 'bin/' directory"
