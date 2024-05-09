@@ -62,3 +62,9 @@ void BOARD_BootClockRUN(void)
     /* Update core clock */
     SystemCoreClockUpdate();
 }
+
+
+void BOARD_A53WFIClockReenable(void) {
+    CLOCK_SetRootMux(kCLOCK_RootUart1, kCLOCK_UartRootmuxSysPll1Div10);
+    CLOCK_SetRootDivider(kCLOCK_RootUart1, 1U, 1U);
+}

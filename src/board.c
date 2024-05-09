@@ -184,11 +184,6 @@ void BOARD_RdcInit(void)
 #endif
 
     CLOCK_ControlGate(kCLOCK_SysPll1Gate, kCLOCK_ClockNeededAll);   /* Enable the CCGR gate for SysPLL1 in Domain 1 */
-    CLOCK_ControlGate(kCLOCK_SysPll2Gate, kCLOCK_ClockNeededAll);   /* Enable the CCGR gate for SysPLL2 in Domain 1 */
-    CLOCK_ControlGate(kCLOCK_SysPll3Gate, kCLOCK_ClockNeededAll);   /* Enable the CCGR gate for SysPLL3 in Domain 1 */
-    CLOCK_ControlGate(kCLOCK_AudioPll1Gate, kCLOCK_ClockNeededAll); /* Enable the CCGR gate for AudioPLL1 in Domain 1 */
-    CLOCK_ControlGate(kCLOCK_AudioPll2Gate, kCLOCK_ClockNeededAll); /* Enable the CCGR gate for AudioPLL2 in Domain 1 */
-    CLOCK_ControlGate(kCLOCK_VideoPll1Gate, kCLOCK_ClockNeededAll); /* Enable the CCGR gate for VideoPLL1 in Domain 1 */
 }
 
 void BOARD_PeripheralRdcSetting(void)
@@ -205,6 +200,9 @@ void BOARD_PeripheralRdcSetting(void)
         /* Do not allow the A53 domain(domain0) to access the following peripherals */
         periphConfig.policy = RDC_DISABLE_A53_ACCESS;
         periphConfig.periph = kRDC_Periph_CAN_FD1;
+        RDC_SetPeriphAccessConfig(RDC, &periphConfig);
+
+        periphConfig.periph = kRDC_Periph_UART1;
         RDC_SetPeriphAccessConfig(RDC, &periphConfig);
     }
 }

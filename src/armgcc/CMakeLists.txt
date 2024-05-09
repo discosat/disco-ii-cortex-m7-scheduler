@@ -36,11 +36,8 @@ set(SchedulerSources
     ${RepoRoot}/src/pin_mux.c
     ${RepoRoot}/src/pin_mux.h
     ${RepoRoot}/src/lpm.c
-    ${RepoRoot}/src/lpm.h
     ${RepoRoot}/src/board.c
-    ${RepoRoot}/src/board.h
     ${RepoRoot}/src/clock_config.c
-    ${RepoRoot}/src/clock_config.h
     ${RepoRoot}/src/fsl_iomuxc.h
     ${RepoRoot}/src/hooks.c
     ${RepoRoot}/src/network_config.c

@@ -20,6 +20,8 @@ extern "C" {
 
 void BOARD_BootClockRUN(void);
 
+void BOARD_A53WFIClockReenable(void);
+
 #if defined(__cplusplus)
 }
 #endif /* __cplusplus*/

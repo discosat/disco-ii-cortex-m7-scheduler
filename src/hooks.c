@@ -2,6 +2,10 @@
 #include "tmu.h"
 #include "param_config.h"
 #include "sys_comm_service.h"
+#include "clock_config.h"
+#include "can_iface.h"
+
+static int a53_enter_suspend_flag = 1;
 
 void hook_onehz(void) {
     // TODO: poll GNSS
@@ -16,6 +20,15 @@ void hook_onehz(void) {
     }
 
     param_set_uint8(&a53_status, (GPC->SLPCR & GPC_SLPCR_EN_DSM_MASK) >> GPC_SLPCR_EN_DSM_SHIFT ? 0 : 1);
+    if (param_get_uint8(&a53_status) == 0) {
+        if (a53_enter_suspend_flag) {
+            BOARD_A53WFIClockReenable();
+            iface_can_init();
+            a53_enter_suspend_flag = 0;
+        }
+    } else {
+        a53_enter_suspend_flag = 1;
+    }
 
     // System registers that shouldn't be accessed when A53 is in WFI mode
     if (param_get_uint8(&a53_status) == 1) {
