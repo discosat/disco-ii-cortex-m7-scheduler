@@ -23,8 +23,8 @@
 #define BOARD_DEBUG_UART_BASEADDR UART1_BASE
 #define BOARD_DEBUG_UART_INSTANCE (1U)
 #define BOARD_DEBUG_UART_CLK_FREQ                                                           \
-    CLOCK_GetPllFreq(kCLOCK_SystemPll1Ctrl) / (CLOCK_GetRootPreDivider(kCLOCK_RootUart1)) / \
-        (CLOCK_GetRootPostDivider(kCLOCK_RootUart1)) / 10
+	CLOCK_GetPllFreq(kCLOCK_SystemPll1Ctrl) / (CLOCK_GetRootPreDivider(kCLOCK_RootUart1)) / \
+		(CLOCK_GetRootPostDivider(kCLOCK_RootUart1)) / 10
 #define BOARD_UART_IRQ         UART1_IRQn
 #define BOARD_UART_IRQ_HANDLER UART1_IRQHandler
 

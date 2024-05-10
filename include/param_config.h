@@ -4,7 +4,6 @@
 
 #include <param/param.h>
 
-
 /* System registers */
 uint32_t _GPIO1__DR;
 uint32_t _GPIO1__GDIR;
@@ -38,25 +37,24 @@ extern param_t TMU__TSCR;
 extern param_t TMU__TRITSR;
 extern param_t TMU__TRATSR;
 
-#define PARAMID_GPC__SLPCR 1
-#define PARAMID_GPC__LPCR_A53_BSC 2
-#define PARAMID_GPC__LPCR_A53_AD 3
-#define PARAMID_GPC__LPCR_M7 4
-#define PARAMID_GPC__MLPCR 5
+#define PARAMID_GPC__SLPCR             1
+#define PARAMID_GPC__LPCR_A53_BSC      2
+#define PARAMID_GPC__LPCR_A53_AD       3
+#define PARAMID_GPC__LPCR_M7           4
+#define PARAMID_GPC__MLPCR             5
 #define PARAMID_GPC_PGC__A53SCU_PUPSCR 6
-#define PARAMID_GPIO1__DR 7
-#define PARAMID_GPIO1__GDIR 8
-#define PARAMID_GPIO2__DR 9
-#define PARAMID_GPIO2__GDIR 10
-#define PARAMID_GPIO3__GDIR 11
-#define PARAMID_GPIO4__GDIR 12
-#define PARAMID_GPIO5__GDIR 13
-#define PARAMID_MUB__SR 14
-#define PARAMID_RDC__STAT 15
-#define PARAMID_TMU__TSCR 16
-#define PARAMID_TMU__TRITSR 17
-#define PARAMID_TMU__TRATSR 18
-
+#define PARAMID_GPIO1__DR              7
+#define PARAMID_GPIO1__GDIR            8
+#define PARAMID_GPIO2__DR              9
+#define PARAMID_GPIO2__GDIR            10
+#define PARAMID_GPIO3__GDIR            11
+#define PARAMID_GPIO4__GDIR            12
+#define PARAMID_GPIO5__GDIR            13
+#define PARAMID_MUB__SR                14
+#define PARAMID_RDC__STAT              15
+#define PARAMID_TMU__TSCR              16
+#define PARAMID_TMU__TRITSR            17
+#define PARAMID_TMU__TRATSR            18
 
 /* Application parameters */
 extern param_t wake_a53;
@@ -71,18 +69,17 @@ extern param_t gnss_speed;
 extern param_t gnss_alt;
 extern param_t gnss_course;
 
-#define PARAMID_WAKE_A53 21
-#define PARAMID_A53_STATUS 22
+#define PARAMID_WAKE_A53    21
+#define PARAMID_A53_STATUS  22
 #define PARAMID_TMU_READING 23
-#define PARAMID_GNSS_LAT 24
-#define PARAMID_GNSS_LON 25
-#define PARAMID_GNSS_AGE 26
-#define PARAMID_GNSS_DATE 27
-#define PARAMID_GNSS_TIME 28
-#define PARAMID_GNSS_SPEED 29
-#define PARAMID_GNSS_ALT 30
+#define PARAMID_GNSS_LAT    24
+#define PARAMID_GNSS_LON    25
+#define PARAMID_GNSS_AGE    26
+#define PARAMID_GNSS_DATE   27
+#define PARAMID_GNSS_TIME   28
+#define PARAMID_GNSS_SPEED  29
+#define PARAMID_GNSS_ALT    30
 #define PARAMID_GNSS_COURSE 31
-
 
 /* General purpose registers */
 uint8_t _p_uint8[32];
@@ -107,13 +104,13 @@ extern param_t p_int64;
 extern param_t p_float;
 extern param_t p_double;
 
-#define PARAM_ID_UINT8 41
+#define PARAM_ID_UINT8  41
 #define PARAM_ID_UINT16 42
 #define PARAM_ID_UINT32 43
 #define PARAM_ID_UINT64 44
-#define PARAM_ID_INT8 45
-#define PARAM_ID_INT16 46
-#define PARAM_ID_INT32 47
-#define PARAM_ID_INT64 48
-#define PARAM_ID_FLOAT 49
+#define PARAM_ID_INT8   45
+#define PARAM_ID_INT16  46
+#define PARAM_ID_INT32  47
+#define PARAM_ID_INT64  48
+#define PARAM_ID_FLOAT  49
 #define PARAM_ID_DOUBLE 50

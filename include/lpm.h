@@ -17,7 +17,7 @@
 #define SYSTICK_IRQn    GPT1_IRQn
 #define SYSTICK_HANDLER GPT1_IRQHandler
 #define SYSTICK_CLOCK \
-    24000000 / (CLOCK_GetRootPreDivider(kCLOCK_RootGpt1)) / (CLOCK_GetRootPostDivider(kCLOCK_RootGpt1))
+	24000000 / (CLOCK_GetRootPreDivider(kCLOCK_RootGpt1)) / (CLOCK_GetRootPostDivider(kCLOCK_RootGpt1))
 
 /* Using SRC_GPR10 register to sync the tasks status with A core */
 #define ServiceFlagAddr SRC->GPR10
@@ -39,7 +39,7 @@ extern "C" {
  * @brief Configure the system tick(GPT) before entering the low power mode.
  * @return Return the sleep time ticks.
  */
-uint32_t LPM_EnterTicklessIdle(uint32_t timeoutMilliSec, uint64_t *pCounter);
+uint32_t LPM_EnterTicklessIdle(uint32_t timeoutMilliSec, uint64_t * pCounter);
 /*!
  * @brief Configure the system tick(GPT) after exist the low power mode.
  */
@@ -61,23 +61,21 @@ bool LPM_AllowSleep(void);
 /*
  * Clock Speed of M core
  */
-typedef enum lpm_mcore_clock_speed
-{
-    LPM_MCORE_HIGH_FREQ,
-    LPM_MCORE_LOW_FREQ
+typedef enum lpm_mcore_clock_speed {
+	LPM_MCORE_HIGH_FREQ,
+	LPM_MCORE_LOW_FREQ
 } LPM_MCORE_CLOCK_SPEED;
 void LPM_MCORE_ChangeMCoreClock(LPM_MCORE_CLOCK_SPEED target);
 
 /*
  * LPM state of M core
  */
-typedef enum lpm_power_status_mcore
-{
-    LPM_MCORE_STATE_RUN,
-    LPM_MCORE_STATE_WAIT,
-    LPM_MCORE_STATE_STOP,
+typedef enum lpm_power_status_mcore {
+	LPM_MCORE_STATE_RUN,
+	LPM_MCORE_STATE_WAIT,
+	LPM_MCORE_STATE_STOP,
 } LPM_POWER_STATUS_MCORE;
-void LPM_MCORE_SetPowerStatus(GPC_Type *base, LPM_POWER_STATUS_MCORE targetPowerMode);
+void LPM_MCORE_SetPowerStatus(GPC_Type * base, LPM_POWER_STATUS_MCORE targetPowerMode);
 
 #if defined(__cplusplus)
 }

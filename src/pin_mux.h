@@ -6,7 +6,6 @@
  *
  */
 
-
 #ifndef _PIN_MUX_H_
 #define _PIN_MUX_H_
 
@@ -29,7 +28,6 @@
 extern "C" {
 #endif
 
-
 /*!
  * @brief Calls initialization functions.
  *
@@ -40,7 +38,7 @@ void BOARD_InitBootPins(void);
  * @brief Configures pin routing and optionally pin electrical features.
  *
  */
-void BOARD_InitPins(void);                                 /*!< Function assigned for the core: Cortex-M7F[m7] */
+void BOARD_InitPins(void); /*!< Function assigned for the core: Cortex-M7F[m7] */
 
 #if defined(__cplusplus)
 }
