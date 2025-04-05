@@ -26,6 +26,7 @@ Modification of fork: https://github.com/acassis/tinygps
 #include <time.h>
 #include "tinygps.h"
 #include "FreeRTOS.h"
+#include "fsl_debug_console.h"
 
 // properties
 unsigned long _time, _new_time;
@@ -94,7 +95,7 @@ float degrees(float rad) {
 
 int gps_encode(char c) {
 	int valid_sentence = false;
-
+	
 #ifndef GPS_NO_STATS
 	_encoded_characters++;
 #endif
@@ -235,6 +236,14 @@ int gps_term_complete() {
 						_numsats = _new_numsats;
 						_hdop = _new_hdop;
 						break;
+					case GPS_SENTENCE_GNRMC:
+						_time = _new_time;
+						_date = _new_date;
+						_latitude = _new_latitude;
+						_longitude = _new_longitude;
+						_speed = _new_speed;
+						_course = _new_course;
+						break;
 				}
 
 				return true;
@@ -254,6 +263,8 @@ int gps_term_complete() {
 			_sentence_type = GPS_SENTENCE_GPRMC;
 		else if (!gpsstrcmp(_term, GPGGA_TERM))
 			_sentence_type = GPS_SENTENCE_GPGGA;
+		else if (!gpsstrcmp(_term, GNRMC_TERM))
+			_sentence_type = GPS_SENTENCE_GNRMC;
 		else
 			_sentence_type = GPS_SENTENCE_OTHER;
 		return false;
@@ -263,38 +274,47 @@ int gps_term_complete() {
 		switch (COMBINE(_sentence_type, _term_number)) {
 			case COMBINE(GPS_SENTENCE_GPRMC, 1):  // Time in both sentences
 			case COMBINE(GPS_SENTENCE_GPGGA, 1):
+			case COMBINE(GPS_SENTENCE_GNRMC, 1):  
 				_new_time = gps_parse_decimal();
 				_new_time_fix = uptime();
 				break;
 			case COMBINE(GPS_SENTENCE_GPRMC, 2):  // GPRMC validity
+			case COMBINE(GPS_SENTENCE_GNRMC, 2):  
 				_is_gps_data_good = (_term[0] == 'A');
 				break;
 			case COMBINE(GPS_SENTENCE_GPRMC, 3):  // Latitude
 			case COMBINE(GPS_SENTENCE_GPGGA, 2):
+			case COMBINE(GPS_SENTENCE_GNRMC, 3):  
 				_new_latitude = gps_parse_degrees();
 				_new_position_fix = uptime();
 				break;
 			case COMBINE(GPS_SENTENCE_GPRMC, 4):  // N/S
 			case COMBINE(GPS_SENTENCE_GPGGA, 3):
+			case COMBINE(GPS_SENTENCE_GNRMC, 4): 
 				if (_term[0] == 'S')
 					_new_latitude = -_new_latitude;
 				break;
 			case COMBINE(GPS_SENTENCE_GPRMC, 5):  // Longitude
 			case COMBINE(GPS_SENTENCE_GPGGA, 4):
+			case COMBINE(GPS_SENTENCE_GNRMC, 5):  
 				_new_longitude = gps_parse_degrees();
 				break;
 			case COMBINE(GPS_SENTENCE_GPRMC, 6):  // E/W
 			case COMBINE(GPS_SENTENCE_GPGGA, 5):
+			case COMBINE(GPS_SENTENCE_GNRMC, 6):  
 				if (_term[0] == 'W')
 					_new_longitude = -_new_longitude;
 				break;
 			case COMBINE(GPS_SENTENCE_GPRMC, 7):  // Speed (GPRMC)
+			case COMBINE(GPS_SENTENCE_GNRMC, 7):
 				_new_speed = gps_parse_decimal();
 				break;
 			case COMBINE(GPS_SENTENCE_GPRMC, 8):  // Course (GPRMC)
+			case COMBINE(GPS_SENTENCE_GNRMC, 8):
 				_new_course = gps_parse_decimal();
 				break;
 			case COMBINE(GPS_SENTENCE_GPRMC, 9):  // Date (GPRMC)
+			case COMBINE(GPS_SENTENCE_GNRMC, 9):
 				_new_date = gpsatol(_term);
 				break;
 			case COMBINE(GPS_SENTENCE_GPGGA, 6):  // Fix data (GPGGA)

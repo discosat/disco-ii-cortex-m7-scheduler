@@ -1,6 +1,6 @@
 #include "fsl_uart.h"
 #include <stdint.h>
-
+#include "fsl_debug_console.h"
 #include <FreeRTOS.h>
 #include <task.h>
 
@@ -29,7 +29,7 @@ static TaskHandle_t gnss_rx_task_handle = NULL;
 
 void GNSS_UART_IRQHandler(void) {
 	uint8_t data;
-
+	
 	if ((UART_GetStatusFlag(GNSS_UART, kUART_RxDataReadyFlag)) || (UART_GetStatusFlag(GNSS_UART, kUART_RxOverrunFlag))) {
 		data = UART_ReadByte(GNSS_UART);
 		uart_rx_buffer[uart_rx_write_ptr] = data;
@@ -61,14 +61,14 @@ void gnss_init() {
 
 	status = UART_Init(GNSS_UART, &config, GNSS_UART_CLK_FREQ);
 	if (kStatus_Success != status) {
-		// TODO: handle error
+		PRINTF("There was an error with init GNSS");
 	}
 
 	NVIC_SetPriority(GNSS_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
 	UART_EnableInterrupts(GNSS_UART, kUART_RxDataReadyEnable | kUART_RxOverrunEnable);
 	status = EnableIRQ(GNSS_IRQn);
 	if (kStatus_Success != status) {
-		// TODO: handle error
+		PRINTF("There was an error with IRQ GNSS");
 	}
 
 	gnss_rx_task_handle = xTaskCreateStatic(
@@ -83,13 +83,11 @@ void gnss_init() {
 
 int gnss_poll() {
 	float flat, flon;
-	unsigned long age;
-	unsigned long gps_date, gps_time;
-
+	unsigned long age, gps_date, gps_time;
 	gps_f_get_position(&flat, &flon, &age);
 	gps_get_datetime(&gps_date, &gps_time, &age);
 
-	float speed = gps_f_speed_mps();
+	float speed = gps_f_speed_kmph();
 	float alt = gps_f_altitude();
 	float course = gps_f_course();
 

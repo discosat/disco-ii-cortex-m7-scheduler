@@ -35,6 +35,8 @@ Modification of fork: https://github.com/acassis/tinygps
 
 #define GPRMC_TERM "GPRMC"
 #define GPGGA_TERM "GPGGA"
+#define GNRMC_TERM "GNRMC"
+#define GNGGA_TERM "GNGGA"
 
 #define GPS_INVALID_F_ANGLE    1000.0
 #define GPS_INVALID_F_ALTITUDE 1000000.0
@@ -91,6 +93,7 @@ void gps_stats(unsigned long * chars, unsigned short * good_sentences, unsigned 
 
 enum {
 	GPS_SENTENCE_GPGGA,
+	GPS_SENTENCE_GNRMC,
 	GPS_SENTENCE_GPRMC,
 	GPS_SENTENCE_OTHER
 };
