@@ -40,7 +40,7 @@ csp_can_interface_data_t ifdata = {
 
 csp_iface_t csp_if_can = {
 	.name = "CAN",
-	.addr = 4,
+	.addr = 5420,
 	.netmask = 8,
 	.interface_data = &ifdata,
 };
